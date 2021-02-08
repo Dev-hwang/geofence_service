@@ -1,0 +1,28 @@
+PODS:
+  - Flutter (1.0.0)
+  - geofence_service (0.0.1):
+    - Flutter
+  - geolocator (6.1.9):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - geofence_service (from `.symlinks/plugins/geofence_service/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  geofence_service:
+    :path: ".symlinks/plugins/geofence_service/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  geofence_service: e007ddec3cf8b85531e8f7b202c1ceabca669d64
+  geolocator: 057a0c63a43e9c5296d8ad845a3ac8e6df23d899
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3
