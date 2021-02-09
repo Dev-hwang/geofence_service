@@ -8,6 +8,9 @@ class GeofenceRadius {
   /// Identifier for [GeofenceRadius].
   final String id;
 
+  /// Custom data for [GeofenceRadius].
+  final dynamic data;
+
   /// Radius length in meters.
   /// The best result should be set between 100 and 150 meters in radius.
   /// If Wi-FI is available, it can be set up to 20~40m.
@@ -45,6 +48,7 @@ class GeofenceRadius {
 
   GeofenceRadius({
     @required this.id,
+    this.data,
     @required this.length
   })  : assert(id != null && id.isNotEmpty),
         assert(length != null && length > 0.0);
@@ -53,6 +57,7 @@ class GeofenceRadius {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'data': data,
       'length': length,
       'status': _status,
       'activity': _activity?.toMap(),

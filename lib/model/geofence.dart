@@ -7,6 +7,9 @@ class Geofence {
   /// Identifier for [Geofence].
   final String id;
 
+  /// Custom data for [Geofence].
+  final dynamic data;
+
   /// The latitude of geofence center.
   final double latitude;
 
@@ -30,6 +33,7 @@ class Geofence {
 
   Geofence({
     @required this.id,
+    this.data,
     @required this.latitude,
     @required this.longitude,
     @required this.radius
@@ -42,6 +46,7 @@ class Geofence {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'data': data,
       'latitude': latitude,
       'longitude': longitude,
       'radius': radius.map((e) => e.toMap()).toList(),

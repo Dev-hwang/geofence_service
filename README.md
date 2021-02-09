@@ -103,7 +103,8 @@ final geofenceService = GeofenceService(
 ```
 
 2. Create a geofence and radius. `Geofence` and `GeofenceRadius` provide the following options:
-* `id`: This is a string to identify the geofence.
+* `id`: String ID that identifies `Geofence` and `GeofenceRadius`.
+* `data`: Custom data for `Geofence` and `GeofenceRadius`.
 * `latitude`: The latitude of geofence center.
 * `longitude`: The longitude of geofence center.
 * `radius`: The radius of geofence.
@@ -269,6 +270,7 @@ geofenceService.stop();
 | Property | Description |
 |---|---|
 | `id` | Identifier for `Geofence`. |
+| `data` | Custom data for `Geofence`. |
 | `latitude` | The latitude of geofence center. |
 | `longitude` | The longitude of geofence center. |
 | `radius` | The radius of geofence. |
@@ -281,6 +283,7 @@ geofenceService.stop();
 | Property | Description |
 |---|---|
 | `id` | Identifier for `GeofenceRadius`. |
+| `data` | Custom data for `GeofenceRadius`. |
 | `length` | Radius length in meters. |
 | `status` | Geofence status of `GeofenceRadius`. |
 | `activity` | Activity when geofence status changes. |
