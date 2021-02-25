@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:geofence_service/model/activity.dart';
-import 'package:geofence_service/model/permission_result.dart';
+import 'package:geofence_service/models/activity.dart';
+import 'package:geofence_service/models/permission_result.dart';
 
 /// ActivityRecognition
 class ActivityRecognition {

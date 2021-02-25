@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geofence_service/model/geofence_radius.dart';
-import 'package:geofence_service/model/geofence_status.dart';
+import 'package:geofence_service/models/geofence_radius.dart';
+import 'package:geofence_service/models/geofence_status.dart';
 
 /// Data class to create geofence.
 class Geofence {

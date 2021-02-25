@@ -1,24 +1,24 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
-import 'package:flutter/cupertino.dart';
-import 'package:geofence_service/model/activity.dart';
-import 'package:geofence_service/model/error_codes.dart';
-import 'package:geofence_service/model/geofence.dart';
-import 'package:geofence_service/model/geofence_radius.dart';
-import 'package:geofence_service/model/geofence_status.dart';
-import 'package:geofence_service/model/permission_result.dart';
+import 'package:flutter/material.dart';
+import 'package:geofence_service/models/activity.dart';
+import 'package:geofence_service/models/error_codes.dart';
+import 'package:geofence_service/models/geofence.dart';
+import 'package:geofence_service/models/geofence_radius.dart';
+import 'package:geofence_service/models/geofence_status.dart';
+import 'package:geofence_service/models/permission_result.dart';
 import 'package:geofence_service/service/activity_recognition.dart';
 import 'package:geolocator/geolocator.dart';
 
-export 'package:geofence_service/component/with_foreground_service.dart';
-export 'package:geofence_service/model/activity.dart';
-export 'package:geofence_service/model/activity_confidence.dart';
-export 'package:geofence_service/model/activity_type.dart';
-export 'package:geofence_service/model/error_codes.dart';
-export 'package:geofence_service/model/geofence.dart';
-export 'package:geofence_service/model/geofence_radius.dart';
-export 'package:geofence_service/model/geofence_status.dart';
+export 'package:geofence_service/ui/with_foreground_service.dart';
+export 'package:geofence_service/models/activity.dart';
+export 'package:geofence_service/models/activity_confidence.dart';
+export 'package:geofence_service/models/activity_type.dart';
+export 'package:geofence_service/models/error_codes.dart';
+export 'package:geofence_service/models/geofence.dart';
+export 'package:geofence_service/models/geofence_radius.dart';
+export 'package:geofence_service/models/geofence_status.dart';
 
 /// Callback function to notify geofence status changes.
 typedef OnGeofenceStatusChanged = void Function(

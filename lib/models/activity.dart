@@ -1,5 +1,5 @@
-import 'package:geofence_service/model/activity_confidence.dart';
-import 'package:geofence_service/model/activity_type.dart';
+import 'package:geofence_service/models/activity_confidence.dart';
+import 'package:geofence_service/models/activity_type.dart';
 
 /// Data class that define user activity.
 class Activity {
