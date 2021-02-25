@@ -74,7 +74,8 @@ class GeofenceService {
     await _listenStream();
 
     _activity = Activity.fromMap({});
-    _refGeofenceList.addAll(geofenceList);
+    if (geofenceList != null)
+      _refGeofenceList.addAll(geofenceList);
 
     _isRunningService = true;
     // dev.log('GeofenceService started.');
