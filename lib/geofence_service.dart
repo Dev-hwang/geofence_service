@@ -73,7 +73,7 @@ class GeofenceService {
     await _checkPermission();
     await _listenStream();
 
-    _activity = Activity.fromMap({});
+    _activity = Activity.unknown;
     if (geofenceList != null)
       _refGeofenceList.addAll(geofenceList);
 

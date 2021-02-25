@@ -23,6 +23,10 @@ class Activity {
     confidence = getActivityConfidenceFromString(map['confidence']);
   }
 
+  /// Get an activity of type unknown.
+  static Activity get unknown => Activity
+      .fromMap({'type': 'UNKNOWN', 'confidence': 'LOW'});
+
   @override
   bool operator ==(Object other) =>
       other is Activity
