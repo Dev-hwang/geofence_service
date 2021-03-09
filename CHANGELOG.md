@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Upgrade geolocator dependency.
+
 ## 1.0.3
 
 * Modify package name.
