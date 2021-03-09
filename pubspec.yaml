@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  geolocator: ^6.1.14
+  geolocator: ^7.0.1
 
 dev_dependencies:
   flutter_test:
