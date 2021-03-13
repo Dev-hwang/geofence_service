@@ -1,3 +1,7 @@
+## 2.0.0
+
+* Migrate null safety.
+
 ## 1.0.4
 
 * Upgrade geolocator dependency.
