@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:geofence_service/models/geofence_radius.dart';
 import 'package:geofence_service/models/geofence_status.dart';
 
@@ -8,7 +7,7 @@ class Geofence {
   final String id;
 
   /// Custom data for [Geofence].
-  final dynamic data;
+  final dynamic? data;
 
   /// The latitude of geofence center.
   final double latitude;
@@ -23,24 +22,22 @@ class Geofence {
   GeofenceStatus get status => _getStatus();
 
   /// Return the timestamp.
-  DateTime get timestamp => _getTimestamp();
+  DateTime? get timestamp => _getTimestamp();
 
   /// Remaining distance to destination.
-  double _remainingDistance;
+  double? _remainingDistance;
 
   /// Return the remaining distance.
-  double get remainingDistance => _remainingDistance;
+  double? get remainingDistance => _remainingDistance;
 
   Geofence({
-    @required this.id,
+    required this.id,
     this.data,
-    @required this.latitude,
-    @required this.longitude,
-    @required this.radius
-  })  : assert(id != null && id.isNotEmpty),
-        assert(latitude != null),
-        assert(longitude != null),
-        assert(radius != null && radius.isNotEmpty);
+    required this.latitude,
+    required this.longitude,
+    required this.radius
+  })  : assert(id.isNotEmpty),
+        assert(radius.isNotEmpty);
 
   /// Return the internal field of the class in map format.
   Map<String, dynamic> toMap() {
@@ -72,9 +69,9 @@ class Geofence {
   }
 
   /// Return the timestamp.
-  DateTime _getTimestamp() {
+  DateTime? _getTimestamp() {
     final timestampList = <DateTime>[];
-    DateTime timestamp;
+    DateTime? timestamp;
     for (int i=0; i<radius.length; i++) {
       timestamp = radius[i].timestamp;
       if (timestamp != null)

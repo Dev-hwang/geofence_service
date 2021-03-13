@@ -40,14 +40,18 @@ enum ErrorCodes {
 }
 
 /// Return the error codes from [value].
-ErrorCodes getErrorCodesFromString(String value) {
-  return ErrorCodes.values.firstWhere((e) {
-    return e.toString() == 'ErrorCodes.$value';
-  }, orElse: () => null);
+ErrorCodes? getErrorCodesFromString(String value) {
+  final errorCodes = ErrorCodes.values
+      .where((e) => e.toString() == 'ErrorCodes.$value');
+
+  if (errorCodes.isNotEmpty)
+    return errorCodes.first;
+
+  return null;
 }
 
 /// Return the error codes from [error].
-ErrorCodes getErrorCodesFromError(dynamic error) {
+ErrorCodes? getErrorCodesFromError(dynamic error) {
   if (error is ErrorCodes) {
     return error;
   } else if (error is PlatformException) {

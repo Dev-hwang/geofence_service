@@ -9,5 +9,5 @@ enum PermissionResult {
 PermissionResult getPermissionResultFromString(String value) {
   return PermissionResult.values.firstWhere((e) {
     return e.toString() == 'PermissionResult.$value';
-  }, orElse: () => null);
+  }, orElse: () => PermissionResult.PERMANENTLY_DENIED);
 }

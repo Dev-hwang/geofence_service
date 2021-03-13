@@ -35,38 +35,37 @@ typedef OnActivityChanged = void Function(
 class GeofenceService {
   /// Time interval to check geofence status in milliseconds.
   /// Default value is `5000`.
-  final int interval;
+  late final int interval;
 
   /// Geofence error range in meters.
   /// Default value is `100`.
-  final int accuracy;
+  late final int accuracy;
 
   /// Whether to allow mock locations.
   /// Default value is `false`.
-  final bool allowMockLocations;
+  late final bool allowMockLocations;
 
   GeofenceService({
     this.interval = 5000,
     this.accuracy = 100,
     this.allowMockLocations = false
-  })  : assert(interval != null && interval >= 0),
-        assert(accuracy != null && accuracy >= 0),
-        assert(allowMockLocations != null);
+  })  : assert(interval >= 0),
+        assert(accuracy >= 0);
 
-  StreamSubscription<Position> _positionStream;
-  StreamSubscription<Activity> _activityStream;
-  Activity _activity;
+  StreamSubscription<Position>? _positionStream;
+  StreamSubscription<Activity>? _activityStream;
+  Activity _activity = Activity.unknown;
 
   final _refGeofenceList = <Geofence>[];
-  OnGeofenceStatusChanged _onGeofenceStatusChanged;
-  OnActivityChanged _onActivityChanged;
-  ValueChanged _onStreamError;
+  OnGeofenceStatusChanged? _onGeofenceStatusChanged;
+  OnActivityChanged? _onActivityChanged;
+  ValueChanged? _onStreamError;
 
   bool _isRunningService = false;
   bool get isRunningService => _isRunningService;
 
   /// Start geofence service. Can be initialized with [geofenceList].
-  Future<void> start([List<Geofence> geofenceList]) async {
+  Future<void> start([List<Geofence>? geofenceList]) async {
     if (_isRunningService)
       return Future.error(ErrorCodes.ALREADY_STARTED);
 
@@ -85,7 +84,7 @@ class GeofenceService {
   Future<void> stop() async {
     await _cancelStream();
 
-    _activity = null;
+    _activity = Activity.unknown;
     _refGeofenceList.clear();
 
     _isRunningService = false;
@@ -107,17 +106,17 @@ class GeofenceService {
   }
 
   /// Set callback function that receives geofence status changes.
-  void setOnGeofenceStatusChanged(OnGeofenceStatusChanged callback) {
+  void setOnGeofenceStatusChanged(OnGeofenceStatusChanged? callback) {
     _onGeofenceStatusChanged = callback;
   }
 
   /// Set callback function that receives activity changes.
-  void setOnActivityChanged(OnActivityChanged callback) {
+  void setOnActivityChanged(OnActivityChanged? callback) {
     _onActivityChanged = callback;
   }
 
   /// Set callback function that receives stream error.
-  void setOnStreamError(ValueChanged callback) {
+  void setOnStreamError(ValueChanged? callback) {
     _onStreamError = callback;
   }
 
@@ -204,7 +203,7 @@ class GeofenceService {
   }
 
   void _onPositionReceive(Position position) {
-    if (position == null) return;
+    // if (position == null) return;
     if (!allowMockLocations && position.isMocked) return;
     if (position.accuracy > accuracy) return;
 
@@ -215,8 +214,8 @@ class GeofenceService {
     //   dev.log('dataList json >> $jsonList');
     // }
 
-    double gDistance; //
-    double rDistance; //
+    double gDistance; // geofence distance
+    double rDistance; // radius distance
     Geofence geofence;
     GeofenceRadius geofenceRadius;
     GeofenceStatus geofenceStatus;
@@ -245,8 +244,7 @@ class GeofenceService {
           continue;
 
         if (_onGeofenceStatusChanged != null)
-          _onGeofenceStatusChanged(
-              geofence, geofenceRadius, geofenceStatus);
+          _onGeofenceStatusChanged!(geofence, geofenceRadius, geofenceStatus);
       }
     }
   }
@@ -255,12 +253,12 @@ class GeofenceService {
     if (_activity == activity) return;
 
     if (_onActivityChanged != null)
-      _onActivityChanged(_activity, activity);
+      _onActivityChanged!(_activity, activity);
     _activity = activity;
   }
 
   void _onStreamErrorReceive(dynamic error) {
     if (_onStreamError != null)
-      _onStreamError(error);
+      _onStreamError!(error);
   }
 }

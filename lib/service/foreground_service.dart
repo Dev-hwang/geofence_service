@@ -8,10 +8,10 @@ class ForegroundService {
 
   /// Start foreground service. Only works on Android.
   static void start({
-    String notificationChannelId,
-    String notificationChannelName,
-    String notificationContentTitle,
-    String notificationContentText
+    String? notificationChannelId,
+    String? notificationChannelName,
+    String? notificationContentTitle,
+    String? notificationContentText
   }) async {
     if (Platform.isAndroid)
       _mChannel.invokeMethod('startForegroundService', {

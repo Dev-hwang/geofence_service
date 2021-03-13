@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:geofence_service/models/activity.dart';
 import 'package:geofence_service/models/geofence_status.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,7 +8,7 @@ class GeofenceRadius {
   final String id;
 
   /// Custom data for [GeofenceRadius].
-  final dynamic data;
+  final dynamic? data;
 
   /// Radius length in meters.
   /// The best result should be set between 100 and 150 meters in radius.
@@ -23,35 +22,35 @@ class GeofenceRadius {
   GeofenceStatus get status => _status;
 
   /// Activity when geofence status changes.
-  Activity _activity;
+  Activity? _activity;
 
   /// Return the activity.
-  Activity get activity => _activity;
+  Activity? get activity => _activity;
 
   /// Speed when geofence status changes.
-  double _speed;
+  double? _speed;
 
   /// Return the speed.
-  double get speed => _speed;
+  double? get speed => _speed;
 
   /// Timestamp when geofence status changes.
-  DateTime _timestamp;
+  DateTime? _timestamp;
 
   /// Return the timestamp.
-  DateTime get timestamp => _timestamp;
+  DateTime? get timestamp => _timestamp;
 
   /// Remaining distance to destination.
-  double _remainingDistance;
+  double? _remainingDistance;
 
   /// Return the remaining distance.
-  double get remainingDistance => _remainingDistance;
+  double? get remainingDistance => _remainingDistance;
 
   GeofenceRadius({
-    @required this.id,
+    required this.id,
     this.data,
-    @required this.length
-  })  : assert(id != null && id.isNotEmpty),
-        assert(length != null && length > 0.0);
+    required this.length
+  })  : assert(id.isNotEmpty),
+        assert(length > 0.0);
 
   /// Return the internal field of the class in map format.
   Map<String, dynamic> toMap() {
@@ -78,7 +77,7 @@ class GeofenceRadius {
   /// If the status changes, it return true, otherwise it return false.
   bool updateStatus(
       GeofenceStatus status, Activity activity, Position position) {
-    if ((status != null) && (status != _status)) {
+    if (status != _status) {
       _status = status;
       _activity = activity;
       _speed = position.speed;

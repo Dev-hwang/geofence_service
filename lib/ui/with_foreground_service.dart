@@ -9,31 +9,29 @@ class WithForegroundService extends StatefulWidget {
   final GeofenceService geofenceService;
 
   /// Channel ID for foreground service notification.
-  final String notificationChannelId;
+  final String? notificationChannelId;
 
   /// Channel Name for foreground service notification.
-  final String notificationChannelName;
+  final String? notificationChannelName;
 
   /// Content Title for foreground service notification.
-  final String notificationContentTitle;
+  final String? notificationContentTitle;
 
   /// Content Text for foreground service notification.
-  final String notificationContentText;
+  final String? notificationContentText;
 
   /// Child widget of current page.
   final Widget child;
 
   WithForegroundService({
-    Key key,
-    @required this.geofenceService,
+    Key? key,
+    required this.geofenceService,
     this.notificationChannelId,
     this.notificationChannelName,
     this.notificationContentTitle,
     this.notificationContentText,
-    @required this.child
-  })  : assert(geofenceService != null),
-        assert(child != null),
-        super(key: key);
+    required this.child
+  })  : super(key: key);
 
   @override
   _WithForegroundServiceState createState() => _WithForegroundServiceState();
@@ -67,12 +65,12 @@ class _WithForegroundServiceState extends State<WithForegroundService>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
