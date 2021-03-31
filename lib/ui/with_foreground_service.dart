@@ -23,7 +23,7 @@ class WithForegroundService extends StatefulWidget {
   /// Child widget of current page.
   final Widget child;
 
-  WithForegroundService({
+  const WithForegroundService({
     Key? key,
     required this.geofenceService,
     this.notificationChannelId,

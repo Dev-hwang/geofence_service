@@ -4,10 +4,10 @@ import 'package:geofence_service/models/activity_type.dart';
 /// Data class that define user activity.
 class Activity {
   /// Type of activity recognized.
-  late ActivityType type;
+  late final ActivityType type;
 
   /// Confidence of activity recognized.
-  late ActivityConfidence confidence;
+  late final ActivityConfidence confidence;
 
   /// Return the internal field of the class in map format.
   Map<String, dynamic> toMap() {
