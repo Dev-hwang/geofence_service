@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:geofence_service/models/activity.dart';
@@ -41,6 +40,10 @@ class GeofenceService {
   /// Default value is `100`.
   late final int accuracy;
 
+  /// Whether to use the activity recognition API.
+  /// Default value is `true`.
+  late final bool useActivityRecognition;
+
   /// Whether to allow mock locations.
   /// Default value is `false`.
   late final bool allowMockLocations;
@@ -48,6 +51,7 @@ class GeofenceService {
   GeofenceService({
     this.interval = 5000,
     this.accuracy = 100,
+    this.useActivityRecognition = true,
     this.allowMockLocations = false
   })  : assert(interval >= 0),
         assert(accuracy >= 0);
@@ -169,6 +173,9 @@ class GeofenceService {
         return Future.error(ErrorCodes.LOCATION_PERMISSION_DENIED);
     }
 
+    if (useActivityRecognition == false)
+      return;
+
     // Check whether to allow activity recognition permission.
     PermissionResult permissionResult = await ActivityRecognition
         .checkPermission();
@@ -189,6 +196,9 @@ class GeofenceService {
       desiredAccuracy: LocationAccuracy.best,
       intervalDuration: Duration(milliseconds: interval)
     ).handleError(_onStreamErrorReceive).listen(_onPositionReceive);
+
+    if (useActivityRecognition == false)
+      return;
 
     _activityStream = ActivityRecognition.getActivityStream()
         .handleError(_onStreamErrorReceive).listen(_onActivityReceive);
