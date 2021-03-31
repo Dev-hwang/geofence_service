@@ -1,3 +1,9 @@
+## 2.0.1
+
+* Add `useActivityRecognition` option to selectively use the activity recognition API.
+* README updates.
+* Example updates.
+
 ## 2.0.0
 
 * Migrate null safety.

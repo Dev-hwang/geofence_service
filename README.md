@@ -13,7 +13,7 @@ To use this plugin, add `geofence_service` as a [dependency in your pubspec.yaml
 
 ```yaml
 dependencies:
-  geofence_service: ^2.0.0
+  geofence_service: ^2.0.1
 ```
 
 After adding the `geofence_service` plugin to the flutter project, we need to specify the platform-specific permissions and services to use for this plugin to work properly.
@@ -92,12 +92,14 @@ To detect changes in user activity, add the following permissions.
 1. Create a geofence service instance. `GeofenceService` provide the following options:
 * `interval`: Time interval to check geofence status in milliseconds. Default value is `5000`.
 * `accuracy`: Geofence error range in meters. Default value is `100`.
+* `useActivityRecognition`: Whether to use the activity recognition API. Default value is `true`.
 * `allowMockLocations`: Whether to allow mock locations. Default value is `false`.
 
 ```dart
 final geofenceService = GeofenceService(
   interval: 2500,
   accuracy: 100,
+  useActivityRecognition: true,
   allowMockLocations: false
 );
 ```
@@ -165,7 +167,7 @@ void onError(dynamic error) {
 @override
 void initState() {
   super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
+  WidgetsBinding.instance?.addPostFrameCallback((_) {
     geofenceService.setOnGeofenceStatusChanged(onGeofenceStatusChanged);
     geofenceService.setOnActivityChanged(onActivityChanged);
     geofenceService.setOnStreamError(onError);
@@ -221,6 +223,39 @@ geofenceService.stop();
 
 ## Model
 
+### :chicken: Geofence
+
+| Property | Description |
+|---|---|
+| `id` | Identifier for `Geofence`. |
+| `data` | Custom data for `Geofence`. |
+| `latitude` | The latitude of geofence center. |
+| `longitude` | The longitude of geofence center. |
+| `radius` | The radius of geofence. |
+| `status` | Geofence status of `Geofence`. |
+| `timestamp` | Timestamp when geofence status changes. |
+| `remainingDistance` | Remaining distance to destination. |
+
+### :chicken: GeofenceRadius
+
+| Property | Description |
+|---|---|
+| `id` | Identifier for `GeofenceRadius`. |
+| `data` | Custom data for `GeofenceRadius`. |
+| `length` | Radius length in meters. |
+| `status` | Geofence status of `GeofenceRadius`. |
+| `activity` | Activity when geofence status changes. |
+| `speed` | Speed when geofence status changes. |
+| `timestamp` | Timestamp when geofence status changes. |
+| `remainingDistance` | Remaining distance to destination. |
+
+### :chicken: GeofenceStatus
+
+| Value | Description |
+|---|---|
+| `ENTER` | Occur when entering the geofence radius. |
+| `EXIT` | Occur when exiting the geofence radius. |
+
 ### :chicken: Activity
 
 | Property | Description |
@@ -264,36 +299,3 @@ geofenceService.stop();
 | `ACTIVITY_UPDATES_REQUEST_FAILED` | Occur when activity updates request fails. |
 | `ACTIVITY_UPDATES_REMOVE_FAILED` | Occur when activity updates remove fails. |
 | `ACTIVITY_DATA_ENCODING_FAILED` | Occur when an error occurs in encoding the recognized activity data. |
-
-### :chicken: Geofence
-
-| Property | Description |
-|---|---|
-| `id` | Identifier for `Geofence`. |
-| `data` | Custom data for `Geofence`. |
-| `latitude` | The latitude of geofence center. |
-| `longitude` | The longitude of geofence center. |
-| `radius` | The radius of geofence. |
-| `status` | Geofence status of `Geofence`. |
-| `timestamp` | Timestamp when geofence status changes. |
-| `remainingDistance` | Remaining distance to destination. |
-
-### :chicken: GeofenceRadius
-
-| Property | Description |
-|---|---|
-| `id` | Identifier for `GeofenceRadius`. |
-| `data` | Custom data for `GeofenceRadius`. |
-| `length` | Radius length in meters. |
-| `status` | Geofence status of `GeofenceRadius`. |
-| `activity` | Activity when geofence status changes. |
-| `speed` | Speed when geofence status changes. |
-| `timestamp` | Timestamp when geofence status changes. |
-| `remainingDistance` | Remaining distance to destination. |
-
-### :chicken: GeofenceStatus
-
-| Value | Description |
-|---|---|
-| `ENTER` | Occur when entering the geofence radius. |
-| `EXIT` | Occur when exiting the geofence radius. |
