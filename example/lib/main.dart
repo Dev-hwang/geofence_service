@@ -68,7 +68,7 @@ class _ExampleAppState extends State<ExampleApp> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       geofenceService.setOnGeofenceStatusChanged(onGeofenceStatusChanged);
       geofenceService.setOnActivityChanged(onActivityChanged);
       geofenceService.setOnStreamError(onError);
@@ -119,7 +119,7 @@ class _ExampleAppState extends State<ExampleApp> {
       stream: activityController.stream,
       builder: (context, snapshot) {
         final updatedTime = DateTime.now();
-        final content = snapshot.data?.toMap()?.toString() ?? '';
+        final content = snapshot.data?.toMap().toString() ?? '';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +137,7 @@ class _ExampleAppState extends State<ExampleApp> {
       stream: geofenceController.stream,
       builder: (context, snapshot) {
         final updatedTime = DateTime.now();
-        final content = snapshot.data?.toMap()?.toString() ?? '';
+        final content = snapshot.data?.toMap().toString() ?? '';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
