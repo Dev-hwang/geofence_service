@@ -65,9 +65,13 @@ open class ForegroundService: Service() {
 		}
 
 		startForeground(serviceId, builder.build())
+		isRunningForegroundService = true
 	}
 
+	private var isRunningForegroundService = false
 	private fun stopForegroundService() {
+		if (!isRunningForegroundService) return
+
 		stopForeground(true)
 		stopSelf()
 	}
