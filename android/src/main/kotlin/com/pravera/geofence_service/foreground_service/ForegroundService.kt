@@ -19,15 +19,29 @@ open class ForegroundService: Service() {
 	open var contentText = "Tap to return to the app using the service."
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		val pm = applicationContext.packageManager
-		val appIcon = getApplicationIcon(pm)
-		val pIntent = getPendingIntent(pm)
-
 		val bundle = intent?.extras
 		channelId = bundle?.getString("notificationChannelId") ?: channelId
 		channelName = bundle?.getString("notificationChannelName") ?: channelName
 		contentTitle = bundle?.getString("notificationContentTitle") ?: contentTitle
 		contentText = bundle?.getString("notificationContentText") ?: contentText
+
+		when (intent?.action) {
+			ForegroundServiceAction.START_SERVICE -> startForegroundService()
+			ForegroundServiceAction.STOP_SERVICE -> stopForegroundService()
+		}
+
+//		return START_NOT_STICKY
+		return super.onStartCommand(intent, flags, startId)
+	}
+
+	override fun onBind(p0: Intent?): IBinder? {
+		return null
+	}
+
+	private fun startForegroundService() {
+		val pm = applicationContext.packageManager
+		val appIcon = getApplicationIcon(pm)
+		val pIntent = getPendingIntent(pm)
 
 		val builder = NotificationCompat.Builder(this, channelId)
 		builder.setOngoing(true)
@@ -46,11 +60,11 @@ open class ForegroundService: Service() {
 		}
 
 		startForeground(serviceId, builder.build())
-		return super.onStartCommand(intent, flags, startId)
 	}
 
-	override fun onBind(p0: Intent?): IBinder? {
-		return null
+	private fun stopForegroundService() {
+		stopForeground(true)
+		stopSelf()
 	}
 
 	private fun getApplicationIcon(pm: PackageManager): Int {

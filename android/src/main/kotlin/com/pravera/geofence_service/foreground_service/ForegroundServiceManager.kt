@@ -8,6 +8,7 @@ import io.flutter.plugin.common.MethodCall
 class ForegroundServiceManager {
 	fun startService(activity: Activity, call: MethodCall) {
 		val intent = Intent(activity, ForegroundService::class.java).apply {
+			action = ForegroundServiceAction.START_SERVICE
 			putExtra("notificationChannelId",
 					call.argument<String>("notificationChannelId"))
 			putExtra("notificationChannelName",
@@ -25,8 +26,14 @@ class ForegroundServiceManager {
 	}
 	
 	fun stopService(activity: Activity) {
-		val intent = Intent(activity, ForegroundService::class.java)
-		activity.stopService(intent)
+		val intent = Intent(activity, ForegroundService::class.java).apply {
+			action = ForegroundServiceAction.STOP_SERVICE
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			activity.startForegroundService(intent)
+		else
+			activity.startService(intent)
 	}
 
 	fun minimizeApp(activity: Activity) {
