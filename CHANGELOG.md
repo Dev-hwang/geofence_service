@@ -1,3 +1,7 @@
+## 2.0.5
+
+* Prevent RemoteServiceException.
+
 ## 2.0.4
 
 * Fix foreground service duplicate call issues.
