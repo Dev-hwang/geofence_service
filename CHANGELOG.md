@@ -1,3 +1,9 @@
+## 2.0.4
+
+* Fix foreground service duplicate call issues.
+* Fix foreground service start and stop timing issues.
+* Change the `serviceId` value of the foreground service. [1 >> 1000]
+
 ## 2.0.1
 
 * Add `useActivityRecognition` option to selectively use the activity recognition API.
