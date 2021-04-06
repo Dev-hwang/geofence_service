@@ -13,10 +13,15 @@ import androidx.core.app.NotificationCompat
 
 open class ForegroundService: Service() {
 	open var serviceId = 1000
-	open var channelId = "geofence_service"
-	open var channelName = "geofence_service"
+	open var channelId = "foreground_service"
+	open var channelName = "foreground service"
 	open var contentTitle = "Geofence Service"
 	open var contentText = "Tap to return to the app using the service."
+
+	override fun onCreate() {
+		super.onCreate()
+		startForegroundService()
+	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		val bundle = intent?.extras
