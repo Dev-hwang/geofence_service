@@ -1,5 +1,7 @@
 This plugin is a geofence service with activity recognition API. It does not use the Geofence API implemented on the platform. Therefore, battery efficiency cannot be guaranteed. Instead, this plugin can provide more accurate and real-time geofancing by navigating your location while your app is alive.
 
+[![pub package](https://img.shields.io/pub/v/geofence_service.svg)](https://pub.dev/packages/geofence_service)
+
 ## Features
 
 * Geofence can have multiple radius.
@@ -96,8 +98,8 @@ To detect changes in user activity, add the following permissions.
 * `allowMockLocations`: Whether to allow mock locations. Default value is `false`.
 
 ```dart
-final geofenceService = GeofenceService(
-  interval: 2500,
+final geofenceService = GeofenceService.instance.setup(
+  interval: 5000,
   accuracy: 100,
   useActivityRecognition: true,
   allowMockLocations: false
@@ -168,9 +170,9 @@ void onError(dynamic error) {
 void initState() {
   super.initState();
   WidgetsBinding.instance?.addPostFrameCallback((_) {
-    geofenceService.setOnGeofenceStatusChanged(onGeofenceStatusChanged);
-    geofenceService.setOnActivityChanged(onActivityChanged);
-    geofenceService.setOnStreamError(onError);
+    geofenceService.addGeofenceStatusChangedListener(onGeofenceStatusChanged);
+    geofenceService.addActivityChangedListener(onActivityChanged);
+    geofenceService.addStreamErrorListener(onError);
     geofenceService.start(geofenceList).catchError(onError);
   });
 }
@@ -215,9 +217,12 @@ geofenceService.removeGeofenceById(string);
 geofenceService.clearGeofenceList();
 ```
 
-6. When you are finished using the service, call the stop function.
+6. When you are finished using the service, remove the callback listener and call the stop function.
 
 ```
+geofenceService.removeGeofenceStatusChangedListener(onGeofenceStatusChanged);
+geofenceService.removeActivityChangedListener(onActivityChanged);
+geofenceService.removeStreamErrorListener(onError);
 geofenceService.stop();
 ```
 

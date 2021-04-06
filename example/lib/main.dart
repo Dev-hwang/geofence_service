@@ -12,7 +12,7 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  final geofenceService = GeofenceService();
+  final geofenceService = GeofenceService.instance;
   final activityController = StreamController<Activity>();
   final geofenceController = StreamController<Geofence>();
 
@@ -69,9 +69,9 @@ class _ExampleAppState extends State<ExampleApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      geofenceService.setOnGeofenceStatusChanged(onGeofenceStatusChanged);
-      geofenceService.setOnActivityChanged(onActivityChanged);
-      geofenceService.setOnStreamError(onError);
+      geofenceService.addGeofenceStatusChangedListener(onGeofenceStatusChanged);
+      geofenceService.addActivityChangedListener(onActivityChanged);
+      geofenceService.addStreamErrorListener(onError);
       geofenceService.start(geofenceList).catchError(onError);
     });
   }

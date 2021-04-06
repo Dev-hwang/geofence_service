@@ -29,12 +29,15 @@ enum ErrorCodes {
   /// Occur when permission is cancelled.
   PERMISSION_REQUEST_CANCELLED,
 
+  /// Stream Error
   /// Occur when activity updates request fails.
   ACTIVITY_UPDATES_REQUEST_FAILED,
 
+  /// Stream Error
   /// Occur when activity updates remove fails.
   ACTIVITY_UPDATES_REMOVE_FAILED,
 
+  /// Stream Error
   /// Occur when an error occurs in encoding the recognized activity data.
   ACTIVITY_DATA_ENCODING_FAILED
 }

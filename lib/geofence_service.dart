@@ -20,53 +20,63 @@ export 'package:geofence_service/models/geofence_radius.dart';
 export 'package:geofence_service/models/geofence_status.dart';
 
 /// Callback function to notify geofence status changes.
-typedef OnGeofenceStatusChanged = void Function(
+typedef GeofenceStatusChangedCallback = void Function(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus);
 
 /// Callback function to notify activity changes.
-typedef OnActivityChanged = void Function(
+typedef ActivityChangedCallback = void Function(
     Activity prevActivity,
     Activity currActivity);
 
 /// Class for creating and monitoring geofence.
 class GeofenceService {
+  GeofenceService._internal();
+  static final instance = GeofenceService._internal();
+
   /// Time interval to check geofence status in milliseconds.
   /// Default value is `5000`.
-  late final int interval;
+  int _interval = 5000;
 
   /// Geofence error range in meters.
   /// Default value is `100`.
-  late final int accuracy;
+  int _accuracy = 100;
 
   /// Whether to use the activity recognition API.
   /// Default value is `true`.
-  late final bool useActivityRecognition;
+  bool _useActivityRecognition = true;
 
   /// Whether to allow mock locations.
   /// Default value is `false`.
-  late final bool allowMockLocations;
-
-  GeofenceService({
-    this.interval = 5000,
-    this.accuracy = 100,
-    this.useActivityRecognition = true,
-    this.allowMockLocations = false
-  })  : assert(interval >= 0),
-        assert(accuracy >= 0);
+  bool _allowMockLocations = false;
 
   StreamSubscription<Position>? _positionStream;
   StreamSubscription<Activity>? _activityStream;
   Activity _activity = Activity.unknown;
 
   final _refGeofenceList = <Geofence>[];
-  OnGeofenceStatusChanged? _onGeofenceStatusChanged;
-  OnActivityChanged? _onActivityChanged;
-  ValueChanged? _onStreamError;
+  final _geofenceStatusChangedListeners = <GeofenceStatusChangedCallback>[];
+  final _activityChangedListeners = <ActivityChangedCallback>[];
+  final _streamErrorListeners = <ValueChanged>[];
 
   bool _isRunningService = false;
   bool get isRunningService => _isRunningService;
+
+  /// Setup geofence service.
+  GeofenceService setup({
+    int? interval,
+    int? accuracy,
+    bool? useActivityRecognition,
+    bool? allowMockLocations
+  }) {
+    _interval = interval ?? _interval;
+    _accuracy = accuracy ?? _accuracy;
+    _useActivityRecognition = useActivityRecognition ?? _useActivityRecognition;
+    _allowMockLocations = allowMockLocations ?? _allowMockLocations;
+
+    return this;
+  }
 
   /// Start geofence service. Can be initialized with [geofenceList].
   Future<void> start([List<Geofence>? geofenceList]) async {
@@ -109,19 +119,34 @@ class GeofenceService {
     // dev.log('GeofenceService resumed.');
   }
 
-  /// Set callback function that receives geofence status changes.
-  void setOnGeofenceStatusChanged(OnGeofenceStatusChanged? callback) {
-    _onGeofenceStatusChanged = callback;
+  /// Register a closure to be called when the [GeofenceStatus] changes.
+  void addGeofenceStatusChangedListener(GeofenceStatusChangedCallback listener) {
+    _geofenceStatusChangedListeners.add(listener);
   }
 
-  /// Set callback function that receives activity changes.
-  void setOnActivityChanged(OnActivityChanged? callback) {
-    _onActivityChanged = callback;
+  /// Remove a previously registered closure from the list of closures that are notified when the [GeofenceStatus] changes.
+  void removeGeofenceStatusChangedListener(GeofenceStatusChangedCallback listener) {
+    _geofenceStatusChangedListeners.remove(listener);
   }
 
-  /// Set callback function that receives stream error.
-  void setOnStreamError(ValueChanged? callback) {
-    _onStreamError = callback;
+  /// Register a closure to be called when the [Activity] changes.
+  void addActivityChangedListener(ActivityChangedCallback listener) {
+    _activityChangedListeners.add(listener);
+  }
+
+  /// Remove a previously registered closure from the list of closures that are notified when the [Activity] changes.
+  void removeActivityChangedListener(ActivityChangedCallback listener) {
+    _activityChangedListeners.remove(listener);
+  }
+
+  /// Register a closure to be called when a stream error occurs.
+  void addStreamErrorListener(ValueChanged listener) {
+    _streamErrorListeners.add(listener);
+  }
+
+  /// Remove a previously registered closure from the list of closures that are notified when a stream error occurs.
+  void removeStreamErrorListener(ValueChanged listener) {
+    _streamErrorListeners.remove(listener);
   }
 
   /// Add geofence.
@@ -173,7 +198,7 @@ class GeofenceService {
         return Future.error(ErrorCodes.LOCATION_PERMISSION_DENIED);
     }
 
-    if (useActivityRecognition == false)
+    if (_useActivityRecognition == false)
       return;
 
     // Check whether to allow activity recognition permission.
@@ -194,10 +219,10 @@ class GeofenceService {
   Future<void> _listenStream() async {
     _positionStream = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
-      intervalDuration: Duration(milliseconds: interval)
+      intervalDuration: Duration(milliseconds: _interval)
     ).handleError(_onStreamErrorReceive).listen(_onPositionReceive);
 
-    if (useActivityRecognition == false)
+    if (_useActivityRecognition == false)
       return;
 
     _activityStream = ActivityRecognition.getActivityStream()
@@ -214,8 +239,8 @@ class GeofenceService {
 
   void _onPositionReceive(Position position) {
     // if (position == null) return;
-    if (!allowMockLocations && position.isMocked) return;
-    if (position.accuracy > accuracy) return;
+    if (!_allowMockLocations && position.isMocked) return;
+    if (position.accuracy > _accuracy) return;
 
     // dev.log('dataList size >> ${_refGeofenceList.length}');
     // if (_refGeofenceList.isNotEmpty) {
@@ -253,8 +278,8 @@ class GeofenceService {
         if (!geofenceRadius.updateStatus(geofenceStatus, _activity, position))
           continue;
 
-        if (_onGeofenceStatusChanged != null)
-          _onGeofenceStatusChanged!(geofence, geofenceRadius, geofenceStatus);
+        for (final listener in _geofenceStatusChangedListeners)
+          listener(geofence, geofenceRadius, geofenceStatus);
       }
     }
   }
@@ -262,13 +287,13 @@ class GeofenceService {
   void _onActivityReceive(Activity activity) {
     if (_activity == activity) return;
 
-    if (_onActivityChanged != null)
-      _onActivityChanged!(_activity, activity);
+    for (final listener in _activityChangedListeners)
+      listener(_activity, activity);
     _activity = activity;
   }
 
   void _onStreamErrorReceive(dynamic error) {
-    if (_onStreamError != null)
-      _onStreamError!(error);
+    for (final listener in _streamErrorListeners)
+      listener(error);
   }
 }
