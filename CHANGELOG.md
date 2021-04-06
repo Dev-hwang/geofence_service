@@ -1,3 +1,18 @@
+## 2.1.0
+
+* Apply singleton pattern. Now access the `GeofenceService` through the `instance` field. Use the `setup` function to set options.
+* Remove `setOnGeofenceStatusChanged` function.
+* Remove `setOnActivityChanged` function.
+* Remove `setOnStreamError` function.
+* Add `addGeofenceStatusChangedListener` function.
+* Add `addActivityChangedListener` function.
+* Add `addStreamErrorListener` function.
+* Add `removeGeofenceStatusChangedListener` function.
+* Add `removeActivityChangedListener` function.
+* Add `removeStreamErrorListener` function.
+* Example updates.
+* README updates.
+
 ## 2.0.5
 
 * Prevent RemoteServiceException.
@@ -11,8 +26,8 @@
 ## 2.0.1
 
 * Add `useActivityRecognition` option to selectively use the activity recognition API.
-* README updates.
 * Example updates.
+* README updates.
 
 ## 2.0.0
 
