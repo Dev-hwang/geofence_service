@@ -12,7 +12,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
 open class ForegroundService: Service() {
-	open var serviceId = 1
+	open var serviceId = 1000
 	open var channelId = "geofence_service"
 	open var channelName = "geofence_service"
 	open var contentTitle = "Geofence Service"
