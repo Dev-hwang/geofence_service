@@ -81,12 +81,10 @@ class _WithForegroundServiceState extends State<WithForegroundService>
         case AppLifecycleState.resumed:
           _stopForegroundService();
           break;
-        case AppLifecycleState.inactive:
-          _startForegroundService();
-          break;
         case AppLifecycleState.paused:
           _startForegroundService();
           break;
+        case AppLifecycleState.inactive:
         case AppLifecycleState.detached:
       }
     }
