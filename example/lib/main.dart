@@ -22,8 +22,9 @@ class _ExampleAppState extends State<ExampleApp> {
       latitude: 35.103422,
       longitude: 129.036023,
       radius: [
-        GeofenceRadius(id: 'radius_25m', length: 25),
         GeofenceRadius(id: 'radius_100m', length: 100),
+        GeofenceRadius(id: 'radius_25m', length: 25),
+        GeofenceRadius(id: 'radius_250m', length: 250),
         GeofenceRadius(id: 'radius_200m', length: 200)
       ]
     ),

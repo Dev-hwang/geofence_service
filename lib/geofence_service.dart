@@ -5,6 +5,7 @@ import 'package:geofence_service/models/activity.dart';
 import 'package:geofence_service/models/error_codes.dart';
 import 'package:geofence_service/models/geofence.dart';
 import 'package:geofence_service/models/geofence_radius.dart';
+import 'package:geofence_service/models/geofence_radius_sort_type.dart';
 import 'package:geofence_service/models/geofence_status.dart';
 import 'package:geofence_service/models/permission_result.dart';
 import 'package:geofence_service/service/activity_recognition.dart';
@@ -17,6 +18,7 @@ export 'package:geofence_service/models/activity_type.dart';
 export 'package:geofence_service/models/error_codes.dart';
 export 'package:geofence_service/models/geofence.dart';
 export 'package:geofence_service/models/geofence_radius.dart';
+export 'package:geofence_service/models/geofence_radius_sort_type.dart';
 export 'package:geofence_service/models/geofence_status.dart';
 
 /// Callback function to notify geofence status changes.
@@ -51,6 +53,10 @@ class GeofenceService {
   /// Default value is `false`.
   bool _allowMockLocations = false;
 
+  /// Set the sort type of the geofence radius.
+  /// Default value is `GeofenceRadiusSortType.DESC`.
+  GeofenceRadiusSortType _geofenceRadiusSortType = GeofenceRadiusSortType.DESC;
+
   StreamSubscription<Position>? _positionStream;
   StreamSubscription<Activity>? _activityStream;
   Activity _activity = Activity.unknown;
@@ -68,12 +74,14 @@ class GeofenceService {
     int? interval,
     int? accuracy,
     bool? useActivityRecognition,
-    bool? allowMockLocations
+    bool? allowMockLocations,
+    GeofenceRadiusSortType? geofenceRadiusSortType
   }) {
     _interval = interval ?? _interval;
     _accuracy = accuracy ?? _accuracy;
     _useActivityRecognition = useActivityRecognition ?? _useActivityRecognition;
     _allowMockLocations = allowMockLocations ?? _allowMockLocations;
+    _geofenceRadiusSortType = geofenceRadiusSortType ?? _geofenceRadiusSortType;
 
     return this;
   }
@@ -257,6 +265,7 @@ class GeofenceService {
     Geofence geofence;
     GeofenceRadius geofenceRadius;
     GeofenceStatus geofenceStatus;
+    List<GeofenceRadius> copyGeofenceRadius;
     for (int i=0; i<_refGeofenceList.length; i++) {
       geofence = _refGeofenceList[i];
 
@@ -267,8 +276,14 @@ class GeofenceService {
           geofence.longitude);
       geofence.updateRemainingDistance(gDistance);
 
-      for (int j=0; j<geofence.radius.length; j++) {
-        geofenceRadius = geofence.radius[j];
+      copyGeofenceRadius = geofence.radius.toList();
+      if (_geofenceRadiusSortType == GeofenceRadiusSortType.ASC)
+        copyGeofenceRadius.sort((a, b) => a.length.compareTo(b.length));
+      else
+        copyGeofenceRadius.sort((a, b) => b.length.compareTo(a.length));
+
+      for (int j=0; j<copyGeofenceRadius.length; j++) {
+        geofenceRadius = copyGeofenceRadius[j];
 
         if (gDistance <= geofenceRadius.length)
           geofenceStatus = GeofenceStatus.ENTER;
