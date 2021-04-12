@@ -20,7 +20,7 @@ export 'package:geofence_service/models/geofence_radius.dart';
 export 'package:geofence_service/models/geofence_status.dart';
 
 /// Callback function to notify geofence status changes.
-typedef GeofenceStatusChangedCallback = void Function(
+typedef GeofenceStatusChangedCallback = Future<void> Function(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus);
@@ -237,7 +237,7 @@ class GeofenceService {
     _activityStream = null;
   }
 
-  void _onPositionReceive(Position position) {
+  void _onPositionReceive(Position position) async {
     // if (position == null) return;
     if (!_allowMockLocations && position.isMocked) return;
     if (position.accuracy > _accuracy) return;
@@ -249,8 +249,11 @@ class GeofenceService {
     //   dev.log('dataList json >> $jsonList');
     // }
 
-    double gDistance; // geofence distance
-    double rDistance; // radius distance
+    // Pause the service to process listeners.
+    pause();
+
+    double gDistance;
+    double rDistance;
     Geofence geofence;
     GeofenceRadius geofenceRadius;
     GeofenceStatus geofenceStatus;
@@ -279,9 +282,13 @@ class GeofenceService {
           continue;
 
         for (final listener in _geofenceStatusChangedListeners)
-          listener(geofence, geofenceRadius, geofenceStatus);
+          await listener(geofence, geofenceRadius, geofenceStatus)
+              .catchError(_onStreamErrorReceive);
       }
     }
+
+    // Service resumes when listener processing is complete.
+    resume();
   }
 
   void _onActivityReceive(Activity activity) {

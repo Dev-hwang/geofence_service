@@ -19,11 +19,12 @@ class _ExampleAppState extends State<ExampleApp> {
   final geofenceList = <Geofence>[
     Geofence(
       id: 'place_1',
-      latitude: 35.105136,
-      longitude: 129.037513,
+      latitude: 35.103422,
+      longitude: 129.036023,
       radius: [
         GeofenceRadius(id: 'radius_25m', length: 25),
-        GeofenceRadius(id: 'radius_100m', length: 100)
+        GeofenceRadius(id: 'radius_100m', length: 100),
+        GeofenceRadius(id: 'radius_200m', length: 200)
       ]
     ),
     Geofence(
@@ -32,15 +33,16 @@ class _ExampleAppState extends State<ExampleApp> {
       longitude: 129.034851,
       radius: [
         GeofenceRadius(id: 'radius_25m', length: 25),
-        GeofenceRadius(id: 'radius_100m', length: 100)
+        GeofenceRadius(id: 'radius_100m', length: 100),
+        GeofenceRadius(id: 'radius_200m', length: 200)
       ]
     ),
   ];
 
-  void onGeofenceStatusChanged(
+  Future<void> onGeofenceStatusChanged(
       Geofence geofence,
       GeofenceRadius geofenceRadius,
-      GeofenceStatus geofenceStatus) {
+      GeofenceStatus geofenceStatus) async {
     dev.log('geofence: ${geofence.toMap()}');
     dev.log('geofenceRadius: ${geofenceRadius.toMap()}');
     dev.log('geofenceStatus: ${geofenceStatus.toString()}\n');
