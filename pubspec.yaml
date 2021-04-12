@@ -1,6 +1,6 @@
 name: geofence_service
 description: This plugin is a geofence service with activity recognition API.
-version: 2.1.0
+version: 2.1.2
 author: WOO JIN HWANG <hwj930513@naver.com>
 homepage: https://github.com/Dev-hwang/geofence_service
 

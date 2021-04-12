@@ -1,3 +1,8 @@
+## 2.1.2
+
+* Add future-async to `GeofenceStatusChangedCallback`.
+* Add `geofenceRadiusSortType` options.
+
 ## 2.1.0
 
 * Apply singleton pattern. Now access the `GeofenceService` through the `instance` field. Use the `setup` function to set options.

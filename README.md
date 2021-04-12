@@ -5,6 +5,7 @@ This plugin is a geofence service with activity recognition API. It does not use
 ## Features
 
 * Geofence can have multiple radius.
+* Controls the order in which the radius comes in and provides future-async processing.
 * Get what activity took place when the device entered the radius.
 * Listen to changes in user activity in real time.
 * Service can be operated in the background using `WithForegroundService` widget.
@@ -15,7 +16,7 @@ To use this plugin, add `geofence_service` as a [dependency in your pubspec.yaml
 
 ```yaml
 dependencies:
-  geofence_service: ^2.1.0
+  geofence_service: ^2.1.2
 ```
 
 After adding the `geofence_service` plugin to the flutter project, we need to specify the platform-specific permissions and services to use for this plugin to work properly.
@@ -96,13 +97,15 @@ To detect changes in user activity, add the following permissions.
 * `accuracy`: Geofence error range in meters. Default value is `100`.
 * `useActivityRecognition`: Whether to use the activity recognition API. Default value is `true`.
 * `allowMockLocations`: Whether to allow mock locations. Default value is `false`.
+* `geofenceRadiusSortType`: Set the sort type of the geofence radius. If you have set multiple radius for one geofence, multiple radius can come in at the same time. At this time, you can control the order in which the radius comes in by referring to the radius meters. Default value is `GeofenceRadiusSortType.DESC`.
 
 ```dart
 final geofenceService = GeofenceService.instance.setup(
   interval: 5000,
   accuracy: 100,
   useActivityRecognition: true,
-  allowMockLocations: false
+  allowMockLocations: false,
+  geofenceRadiusSortType: GeofenceRadiusSortType.DESC
 );
 ```
 
@@ -140,10 +143,10 @@ final geofenceList = <Geofence>[
 3. Register the callback function and start the geofence service.
 
 ```dart
-void onGeofenceStatusChanged(
+Future<void> onGeofenceStatusChanged(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
-    GeofenceStatus geofenceStatus) {
+    GeofenceStatus geofenceStatus) async {
   dev.log('geofence: ${geofence.toMap()}');
   dev.log('geofenceRadius: ${geofenceRadius.toMap()}');
   dev.log('geofenceStatus: ${geofenceStatus.toString()}\n');
@@ -289,6 +292,13 @@ geofenceService.stop();
 | `MEDIUM` |  |
 | `LOW` |  |
 
+### :chicken: GeofenceRadiusSortType
+
+| Value | Description |
+|---|---|
+| `ASC` | Sort the meters in ascending order. |
+| `DESC` | Sort the meters in descending order. |
+
 ### :chicken: ErrorCodes
 
 | Value | Description |
@@ -301,6 +311,6 @@ geofenceService.stop();
 | `ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED` | Occur when activity recognition permission is permanently denied. In this case, the user must manually set the permission. |
 | `ACTIVITY_NOT_REGISTERED` | Occur when a channel is called when an activity object is not registered in the android platform. |
 | `PERMISSION_REQUEST_CANCELLED` | Occur when permission is cancelled. |
-| `ACTIVITY_UPDATES_REQUEST_FAILED` | Occur when activity updates request fails. |
-| `ACTIVITY_UPDATES_REMOVE_FAILED` | Occur when activity updates remove fails. |
-| `ACTIVITY_DATA_ENCODING_FAILED` | Occur when an error occurs in encoding the recognized activity data. |
+| `ACTIVITY_UPDATES_REQUEST_FAILED` | Stream Error - Occur when activity updates request fails. |
+| `ACTIVITY_UPDATES_REMOVE_FAILED` | Stream Error - Occur when activity updates remove fails. |
+| `ACTIVITY_DATA_ENCODING_FAILED` | Stream Error - Occur when an error occurs in encoding the recognized activity data. |
