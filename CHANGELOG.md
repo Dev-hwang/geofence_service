@@ -1,3 +1,7 @@
+## 2.1.3
+
+* Upgrade geolocator: ^7.0.2
+
 ## 2.1.2
 
 * Add future-async to `GeofenceStatusChangedCallback`.
@@ -40,7 +44,7 @@
 
 ## 1.0.4
 
-* Upgrade geolocator dependency.
+* Upgrade geolocator: ^7.0.1
 
 ## 1.0.3
 
