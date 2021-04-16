@@ -1,3 +1,7 @@
+## 2.1.4
+
+* Upgrade geolocator: ^7.0.3
+
 ## 2.1.3
 
 * Upgrade geolocator: ^7.0.2
