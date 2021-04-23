@@ -1,8 +1,8 @@
-/// Define the type of geofence status.
+/// Defines the type of the geofence status.
 enum GeofenceStatus {
-  /// Occur when entering the geofence radius.
+  /// Occurs when entering the geofence radius.
   ENTER,
 
-  /// Occur when exiting the geofence radius.
+  /// Occurs when exiting the geofence radius.
   EXIT
 }

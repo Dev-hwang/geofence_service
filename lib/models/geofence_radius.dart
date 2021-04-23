@@ -1,50 +1,51 @@
-import 'package:geofence_service/models/activity.dart';
+import 'package:flutter_activity_recognition/models/activity.dart';
 import 'package:geofence_service/models/geofence_status.dart';
 import 'package:geolocator/geolocator.dart';
 
-/// Data class to create radius of [Geofence].
+/// A model representing the radius of [Geofence].
 class GeofenceRadius {
   /// Identifier for [GeofenceRadius].
   final String id;
 
   /// Custom data for [GeofenceRadius].
-  final dynamic? data;
+  final dynamic data;
 
-  /// Radius length in meters.
+  /// The length of the radius in meters.
   /// The best result should be set between 100 and 150 meters in radius.
   /// If Wi-FI is available, it can be set up to 20~40m.
   final double length;
 
-  /// Geofence status of [GeofenceRadius].
+  /// The status of [GeofenceRadius].
   GeofenceStatus _status = GeofenceStatus.EXIT;
 
-  /// Return the geofence status.
+  /// Returns the status of [GeofenceRadius].
   GeofenceStatus get status => _status;
 
-  /// Activity when geofence status changes.
+  /// The user activity when geofence status changes.
   Activity? _activity;
 
-  /// Return the activity.
+  /// Returns the user activity when geofence status changes.
   Activity? get activity => _activity;
 
-  /// Speed when geofence status changes.
+  /// The passing speed when geofence status changes.
   double? _speed;
 
-  /// Return the speed.
+  /// Returns the passing speed when geofence status changes.
   double? get speed => _speed;
 
-  /// Timestamp when geofence status changes.
+  /// The timestamp when geofence status changes.
   DateTime? _timestamp;
 
-  /// Return the timestamp.
+  /// Returns the timestamp when geofence status changes.
   DateTime? get timestamp => _timestamp;
 
-  /// Remaining distance to destination.
+  /// The remaining distance to the radius.
   double? _remainingDistance;
 
-  /// Return the remaining distance.
+  /// Returns the remaining distance to the radius.
   double? get remainingDistance => _remainingDistance;
 
+  /// Constructs an instance of [GeofenceRadius].
   GeofenceRadius({
     required this.id,
     this.data,
@@ -52,7 +53,7 @@ class GeofenceRadius {
   })  : assert(id.isNotEmpty),
         assert(length > 0.0);
 
-  /// Return the internal field of the class in map format.
+  /// Returns the data fields of [GeofenceRadius] in [Map] format.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -66,15 +67,15 @@ class GeofenceRadius {
     };
   }
 
-  /// Update the remaining distance.
+  /// Update the remaining distance of [GeofenceRadius].
   void updateRemainingDistance(double distance) {
     if (distance < 0.0)
       _remainingDistance = 0.0;
     _remainingDistance = distance;
   }
 
-  /// Update geofence status of [GeofenceRadius].
-  /// If the status changes, it return true, otherwise it return false.
+  /// Update the status of [GeofenceRadius].
+  /// Returns true if the status changes, false otherwise.
   bool updateStatus(
       GeofenceStatus status, Activity activity, Position position) {
     if (status != _status) {

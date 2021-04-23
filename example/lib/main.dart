@@ -12,11 +12,20 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  final geofenceService = GeofenceService.instance;
-  final activityController = StreamController<Activity>();
-  final geofenceController = StreamController<Geofence>();
+  final _activityStreamController = StreamController<Activity>();
+  final _geofenceStreamController = StreamController<Geofence>();
 
-  final geofenceList = <Geofence>[
+  // Create a [GeofenceService] instance and set options.
+  final _geofenceService = GeofenceService.instance.setup(
+    interval: 5000,
+    accuracy: 100,
+    useActivityRecognition: true,
+    allowMockLocations: false,
+    geofenceRadiusSortType: GeofenceRadiusSortType.DESC
+  );
+
+  // Create a [Geofence] list.
+  final _geofenceList = <Geofence>[
     Geofence(
       id: 'place_1',
       latitude: 35.103422,
@@ -40,25 +49,26 @@ class _ExampleAppState extends State<ExampleApp> {
     ),
   ];
 
-  Future<void> onGeofenceStatusChanged(
+  Future<void> _onGeofenceStatusChanged(
       Geofence geofence,
       GeofenceRadius geofenceRadius,
-      GeofenceStatus geofenceStatus) async {
+      GeofenceStatus geofenceStatus,
+      Position position) async {
     dev.log('geofence: ${geofence.toMap()}');
     dev.log('geofenceRadius: ${geofenceRadius.toMap()}');
     dev.log('geofenceStatus: ${geofenceStatus.toString()}\n');
-    geofenceController.sink.add(geofence);
+    _geofenceStreamController.sink.add(geofence);
   }
 
-  void onActivityChanged(
+  void _onActivityChanged(
       Activity prevActivity,
       Activity currActivity) {
     dev.log('prevActivity: ${prevActivity.toMap()}');
     dev.log('currActivity: ${currActivity.toMap()}\n');
-    activityController.sink.add(currActivity);
+    _activityStreamController.sink.add(currActivity);
   }
 
-  void onError(dynamic error) {
+  void _onError(dynamic error) {
     final errorCode = getErrorCodesFromError(error);
     if (errorCode == null) {
       dev.log('Undefined error: $error');
@@ -72,26 +82,38 @@ class _ExampleAppState extends State<ExampleApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      geofenceService.addGeofenceStatusChangedListener(onGeofenceStatusChanged);
-      geofenceService.addActivityChangedListener(onActivityChanged);
-      geofenceService.addStreamErrorListener(onError);
-      geofenceService.start(geofenceList).catchError(onError);
+      _geofenceService.addGeofenceStatusChangedListener(_onGeofenceStatusChanged);
+      _geofenceService.addActivityChangedListener(_onActivityChanged);
+      _geofenceService.addStreamErrorListener(_onError);
+      _geofenceService.start(_geofenceList).catchError(_onError);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Use to run the geofence service in the background.
-      // Declare between the [MaterialApp] and [Scaffold] widgets.
-      home: WithForegroundService(
-        geofenceService: geofenceService,
+      // A widget used when you want to start a foreground task when trying to minimize or close the app.
+      // Declare on top of the [Scaffold] widget.
+      home: WillStartForegroundTask(
+        onWillStart: () {
+          // You can add a foreground task start condition.
+          return _geofenceService.isRunningService;
+        },
+        notificationOptions: NotificationOptions(
+          channelId: 'geofence_service_notification_channel',
+          channelName: 'Geofence Service Notification',
+          channelDescription: 'This notification appears when the geofence service is running in the background.',
+          channelImportance: NotificationChannelImportance.LOW,
+          priority: NotificationPriority.LOW
+        ),
+        notificationTitle: 'Geofence Service is running',
+        notificationText: 'Tap to return to the app',
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Geofence Service Example'),
+            title: const Text('Geofence Service'),
             centerTitle: true
           ),
-          body: buildContentView()
+          body: _buildContentView()
         ),
       ),
     );
@@ -99,54 +121,55 @@ class _ExampleAppState extends State<ExampleApp> {
 
   @override
   void dispose() {
-    activityController.close();
-    geofenceController.close();
+    _activityStreamController.close();
+    _geofenceStreamController.close();
     super.dispose();
   }
 
-  Widget buildContentView() {
-    return Padding(
+  Widget _buildContentView() {
+    return ListView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildActivityMonitor(),
-          Expanded(child: buildGeofenceMonitor())
-        ],
-      ),
+      children: [
+        _buildActivityMonitor(),
+        SizedBox(height: 20.0),
+        _buildGeofenceMonitor()
+      ],
     );
   }
   
-  Widget buildActivityMonitor() {
+  Widget _buildActivityMonitor() {
     return StreamBuilder<Activity>(
-      stream: activityController.stream,
+      stream: _activityStreamController.stream,
       builder: (context, snapshot) {
-        final updatedTime = DateTime.now();
+        final updatedDateTime = DateTime.now();
         final content = snapshot.data?.toMap().toString() ?? '';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('\tActivity (updated: $updatedTime)'),
-            Card(color: Colors.lightGreen, child: Text(content))
+            Text('•\t\tActivity (updated: $updatedDateTime)'),
+            SizedBox(height: 10.0),
+            Text(content)
           ]
         );
       }
     );
   }
   
-  Widget buildGeofenceMonitor() {
+  Widget _buildGeofenceMonitor() {
     return StreamBuilder<Geofence>(
-      stream: geofenceController.stream,
+      stream: _geofenceStreamController.stream,
       builder: (context, snapshot) {
-        final updatedTime = DateTime.now();
+        final updatedDateTime = DateTime.now();
         final content = snapshot.data?.toMap().toString() ?? '';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('\tGeofence (updated: $updatedTime)'),
-            Card(color: Colors.lightGreen, child: Text(content))
+            Text('•\t\tGeofence (updated: $updatedDateTime)'),
+            SizedBox(height: 10.0),
+            Text(content)
           ]
         );
       }

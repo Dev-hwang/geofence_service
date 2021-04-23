@@ -1,13 +1,13 @@
 import 'package:geofence_service/models/geofence_radius.dart';
 import 'package:geofence_service/models/geofence_status.dart';
 
-/// Data class to create geofence.
+/// A model representing a geofence.
 class Geofence {
   /// Identifier for [Geofence].
   final String id;
 
   /// Custom data for [Geofence].
-  final dynamic? data;
+  final dynamic data;
 
   /// The latitude of geofence center.
   final double latitude;
@@ -15,21 +15,22 @@ class Geofence {
   /// The longitude of geofence center.
   final double longitude;
 
-  /// The radius of geofence.
+  /// The radius of [Geofence].
   final List<GeofenceRadius> radius;
 
-  /// Return the geofence status.
+  /// Returns the status of [Geofence].
   GeofenceStatus get status => _getStatus();
 
-  /// Return the timestamp.
+  /// Returns the timestamp of [Geofence].
   DateTime? get timestamp => _getTimestamp();
 
-  /// Remaining distance to destination.
+  /// The remaining distance to the destination.
   double? _remainingDistance;
 
-  /// Return the remaining distance.
+  /// Returns the remaining distance to the destination.
   double? get remainingDistance => _remainingDistance;
 
+  /// Constructs an instance of [Geofence].
   Geofence({
     required this.id,
     this.data,
@@ -39,7 +40,7 @@ class Geofence {
   })  : assert(id.isNotEmpty),
         assert(radius.isNotEmpty);
 
-  /// Return the internal field of the class in map format.
+  /// Returns the data fields of [Geofence] in [Map] format.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -53,14 +54,14 @@ class Geofence {
     };
   }
 
-  /// Update the remaining distance.
+  /// Update the remaining distance of [Geofence].
   void updateRemainingDistance(double distance) {
     if (distance < 0.0)
       _remainingDistance = 0.0;
     _remainingDistance = distance;
   }
 
-  /// Return the geofence status.
+  /// Gets the status of [Geofence].
   GeofenceStatus _getStatus() {
     if (radius.where((e) => e.status == GeofenceStatus.ENTER).isNotEmpty)
       return GeofenceStatus.ENTER;
@@ -68,7 +69,7 @@ class Geofence {
       return GeofenceStatus.EXIT;
   }
 
-  /// Return the timestamp.
+  /// Gets the timestamp of [Geofence].
   DateTime? _getTimestamp() {
     final timestampList = <DateTime>[];
     DateTime? timestamp;
