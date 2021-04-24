@@ -19,6 +19,8 @@ class _ExampleAppState extends State<ExampleApp> {
   final _geofenceService = GeofenceService.instance.setup(
     interval: 5000,
     accuracy: 100,
+    loiteringDelayMs: 60000,
+    statusChangeDelayMs: 10000,
     useActivityRecognition: true,
     allowMockLocations: false,
     geofenceRadiusSortType: GeofenceRadiusSortType.DESC
