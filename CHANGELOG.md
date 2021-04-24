@@ -1,3 +1,11 @@
+## 3.0.0
+
+* [**BREAKING**] Remove the activity_recognition package inside the plugin, and add the `flutter_activity_recognition: ^1.0.0` plugin.
+* [**BREAKING**] Remove the foreground_service package inside the plugin, and add the `flutter_foreground_task: ^1.0.7` plugin.
+* Updates Comment and Documentation.
+* Android SDK target upgrade.
+* Please refer to the [upgrade guide](https://github.com/Dev-hwang/geofence_service/blob/master/UPGRADE_GUIDE.md) for details.
+
 ## 2.1.4
 
 * Upgrade geolocator: ^7.0.3
