@@ -1,3 +1,9 @@
+## 3.0.3
+
+* Add `GeofenceStatus.DWELL` that occurs when loitering within a geofence radius.
+* Add `loiteringDelayMs` options.
+* Add `statusChangeDelayMs` options.
+
 ## 3.0.0
 
 * [**BREAKING**] Remove the activity_recognition package inside the plugin, and add the `flutter_activity_recognition: ^1.0.0` plugin.

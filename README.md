@@ -17,7 +17,7 @@ To use this plugin, add `geofence_service` as a [dependency in your pubspec.yaml
 
 ```yaml
 dependencies:
-  geofence_service: ^3.0.0
+  geofence_service: ^3.0.3
 ```
 
 After adding the `geofence_service` plugin to the flutter project, we need to specify the platform-specific permissions and services to use for this plugin to work properly.
@@ -295,6 +295,7 @@ Defines the type of the geofence status.
 |---|---|
 | `ENTER` | Occurs when entering the geofence radius. |
 | `EXIT` | Occurs when exiting the geofence radius. |
+| `DWELL` | Occurs when the loitering delay elapses after entering the geofence area. |
 
 ### :chicken: Activity
 
