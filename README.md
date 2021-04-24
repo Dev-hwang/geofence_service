@@ -9,6 +9,8 @@ This plugin is a geofence service with activity recognition API. It does not use
 * `GeofenceService` can perform geo-fencing in real time and catch errors during operation.
 * `GeofenceService` can be operated in the background using `WillStartForegroundTask` widget.
 
+**WAIT!:** This plugin performs geo-fencing based on a circular geofence. If you want to create a polygon geofence, this [plugin](https://pub.dev/packages/poly_geofence_service) is recommended.
+
 ## Getting started
 
 To use this plugin, add `geofence_service` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). For example:
@@ -98,6 +100,8 @@ To detect changes in user activity, add the following permissions.
 1. Create a `GeofenceService` instance and set options. `GeofenceService.instance.setup()` provides the following options:
 * `interval`: The time interval in milliseconds to check the geofence status. The default is `5000`.
 * `accuracy`: Geo-fencing error range in meters. The default is `100`.
+* `loiteringDelayMs`: Sets the delay between `GeofenceStatus.ENTER` and `GeofenceStatus.DWELL` in milliseconds. The default is `300000`.
+* `statusChangeDelayMs`: Sets the status change delay in milliseconds. `GeofenceStatus.ENTER` and `GeofenceStatus.EXIT` events may be called frequently when the location is near the boundary of the geofence. Use this option to minimize event calls at this time. If the option value is too large, realtime geo-fencing is not possible, so use it carefully. The default is `10000`.
 * `useActivityRecognition`: Whether to use the activity recognition API. The default is `true`.
 * `allowMockLocations`: Whether to allow mock locations. The default is `false`.
 * `geofenceRadiusSortType`: Sets the sort type of the geofence radius. The default is `GeofenceRadiusSortType.DESC`.
@@ -106,6 +110,8 @@ To detect changes in user activity, add the following permissions.
 final _geofenceService = GeofenceService.instance.setup(
   interval: 5000,
   accuracy: 100,
+  loiteringDelayMs: 60000,
+  statusChangeDelayMs: 10000,
   useActivityRecognition: true,
   allowMockLocations: false,
   geofenceRadiusSortType: GeofenceRadiusSortType.DESC
