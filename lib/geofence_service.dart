@@ -57,6 +57,13 @@ class GeofenceService {
   /// The default is `300000`.
   int _loiteringDelayMs = 300000;
 
+  /// Sets the status change delay in milliseconds.
+  /// [GeofenceStatus.ENTER] and [GeofenceStatus.EXIT] events may be called frequently
+  /// when the location is near the boundary of the geofence. Use this option to minimize event calls at this time.
+  /// If the option value is too large, realtime geo-fencing is not possible, so use it carefully.
+  /// The default is `10000`.
+  int _statusChangeDelayMs = 10000;
+
   /// Whether to use the activity recognition API.
   /// The default is `true`.
   bool _useActivityRecognition = true;
@@ -84,6 +91,7 @@ class GeofenceService {
     int? interval,
     int? accuracy,
     int? loiteringDelayMs,
+    int? statusChangeDelayMs,
     bool? useActivityRecognition,
     bool? allowMockLocations,
     GeofenceRadiusSortType? geofenceRadiusSortType
@@ -91,6 +99,7 @@ class GeofenceService {
     _interval = interval ?? _interval;
     _accuracy = accuracy ?? _accuracy;
     _loiteringDelayMs = loiteringDelayMs ?? _loiteringDelayMs;
+    _statusChangeDelayMs = statusChangeDelayMs ?? _statusChangeDelayMs;
     _useActivityRecognition = useActivityRecognition ?? _useActivityRecognition;
     _allowMockLocations = allowMockLocations ?? _allowMockLocations;
     _geofenceRadiusSortType = geofenceRadiusSortType ?? _geofenceRadiusSortType;
@@ -318,6 +327,10 @@ class GeofenceService {
         // 지오펜스 반경 남은 거리 계산 및 업데이트
         radRemainingDistance = geoRemainingDistance - geofenceRadius.length;
         geofenceRadius.updateRemainingDistance(radRemainingDistance);
+
+        // 상태 변경이 빈번하게 발생하지 않도록 딜레이 적용
+        if (radTimestamp != null
+            && diffTimestamp.inMilliseconds < _statusChangeDelayMs) continue;
 
         // 지오펜스 반경 상태 업데이트
         if (!geofenceRadius.updateStatus(geofenceStatus, _activity, position))
