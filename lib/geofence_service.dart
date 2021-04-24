@@ -53,6 +53,10 @@ class GeofenceService {
   /// The default is `100`.
   int _accuracy = 100;
 
+  /// Sets the delay between [GeofenceStatus.ENTER] and [GeofenceStatus.DWELL] in milliseconds.
+  /// The default is `300000`.
+  int _loiteringDelayMs = 300000;
+
   /// Whether to use the activity recognition API.
   /// The default is `true`.
   bool _useActivityRecognition = true;
@@ -79,12 +83,14 @@ class GeofenceService {
   GeofenceService setup({
     int? interval,
     int? accuracy,
+    int? loiteringDelayMs,
     bool? useActivityRecognition,
     bool? allowMockLocations,
     GeofenceRadiusSortType? geofenceRadiusSortType
   }) {
     _interval = interval ?? _interval;
     _accuracy = accuracy ?? _accuracy;
+    _loiteringDelayMs = loiteringDelayMs ?? _loiteringDelayMs;
     _useActivityRecognition = useActivityRecognition ?? _useActivityRecognition;
     _allowMockLocations = allowMockLocations ?? _allowMockLocations;
     _geofenceRadiusSortType = geofenceRadiusSortType ?? _geofenceRadiusSortType;
@@ -259,42 +265,65 @@ class GeofenceService {
     // Pause the service and process the position.
     pause();
 
-    double gDistance;
-    double rDistance;
+    double geoRemainingDistance;
+    double radRemainingDistance;
     Geofence geofence;
     GeofenceRadius geofenceRadius;
     GeofenceStatus geofenceStatus;
-    List<GeofenceRadius> copyGeofenceRadius;
+    List<GeofenceRadius> geofenceRadiusList;
+
+    final currTimestamp = position.timestamp ?? DateTime.now();
+    DateTime? radTimestamp;
+    Duration diffTimestamp;
+
     for (int i=0; i<_geofenceList.length; i++) {
       geofence = _geofenceList[i];
 
-      gDistance = Geolocator.distanceBetween(
+      // 지오펜스 남은 거리 계산 및 업데이트
+      geoRemainingDistance = Geolocator.distanceBetween(
           position.latitude,
           position.longitude,
           geofence.latitude,
           geofence.longitude);
-      geofence.updateRemainingDistance(gDistance);
+      geofence.updateRemainingDistance(geoRemainingDistance);
 
-      copyGeofenceRadius = geofence.radius.toList();
+      // 지오펜스 반경 미터 단위 정렬
+      geofenceRadiusList = geofence.radius.toList();
       if (_geofenceRadiusSortType == GeofenceRadiusSortType.ASC)
-        copyGeofenceRadius.sort((a, b) => a.length.compareTo(b.length));
+        geofenceRadiusList.sort((a, b) => a.length.compareTo(b.length));
       else
-        copyGeofenceRadius.sort((a, b) => b.length.compareTo(a.length));
+        geofenceRadiusList.sort((a, b) => b.length.compareTo(a.length));
 
-      for (int j=0; j<copyGeofenceRadius.length; j++) {
-        geofenceRadius = copyGeofenceRadius[j];
+      // 지오펜스 반경 처리 시작
+      for (int j=0; j<geofenceRadiusList.length; j++) {
+        geofenceRadius = geofenceRadiusList[j];
 
-        if (gDistance <= geofenceRadius.length)
+        // 지오펜스 반경 상태 업데이트 시간차 계산
+        radTimestamp = geofenceRadius.timestamp;
+        diffTimestamp = currTimestamp.difference(radTimestamp ?? currTimestamp);
+
+        // 지오펜스 반경 상태 결정
+        if (geoRemainingDistance <= geofenceRadius.length) {
           geofenceStatus = GeofenceStatus.ENTER;
-        else
+
+          if ((diffTimestamp.inMilliseconds > _loiteringDelayMs
+              && geofenceRadius.status == GeofenceStatus.ENTER)
+              || geofenceRadius.status == GeofenceStatus.DWELL) {
+            geofenceStatus = GeofenceStatus.DWELL;
+          }
+        } else {
           geofenceStatus = GeofenceStatus.EXIT;
+        }
 
-        rDistance = gDistance - geofenceRadius.length;
-        geofenceRadius.updateRemainingDistance(rDistance);
+        // 지오펜스 반경 남은 거리 계산 및 업데이트
+        radRemainingDistance = geoRemainingDistance - geofenceRadius.length;
+        geofenceRadius.updateRemainingDistance(radRemainingDistance);
 
+        // 지오펜스 반경 상태 업데이트
         if (!geofenceRadius.updateStatus(geofenceStatus, _activity, position))
           continue;
 
+        // 지오펜스 상태 변화 알림
         for (final listener in _geofenceStatusChangedListeners)
           await listener(geofence, geofenceRadius, geofenceStatus, position)
               .catchError(_handleStreamError);

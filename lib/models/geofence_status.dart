@@ -4,5 +4,8 @@ enum GeofenceStatus {
   ENTER,
 
   /// Occurs when exiting the geofence radius.
-  EXIT
+  EXIT,
+
+  /// Occurs when the loitering delay elapses after entering the geofence area.
+  DWELL
 }

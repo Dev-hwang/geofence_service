@@ -63,8 +63,13 @@ class Geofence {
 
   /// Gets the status of [Geofence].
   GeofenceStatus _getStatus() {
-    if (radius.where((e) => e.status == GeofenceStatus.ENTER).isNotEmpty)
-      return GeofenceStatus.ENTER;
+    final innerRadius = radius.where((e) => e.status != GeofenceStatus.EXIT);
+    final dwellRadius = innerRadius.where((e) => e.status == GeofenceStatus.DWELL);
+
+    if (innerRadius.isNotEmpty)
+      return dwellRadius.isNotEmpty
+          ? GeofenceStatus.DWELL
+          : GeofenceStatus.ENTER;
     else
       return GeofenceStatus.EXIT;
   }
@@ -80,10 +85,9 @@ class Geofence {
     }
 
     timestampList.sort((a, b) => a.compareTo(b));
-    if (timestampList.isEmpty)
-      return null;
+    if (timestampList.isEmpty) return null;
 
-    if (_getStatus() == GeofenceStatus.ENTER)
+    if (_getStatus() != GeofenceStatus.EXIT)
       return timestampList.first;
     else
       return timestampList.last;
