@@ -1,3 +1,7 @@
+## 3.0.4
+
+* Upgrade flutter_foreground_task: ^1.0.8
+
 ## 3.0.3
 
 * Add `GeofenceStatus.DWELL` that occurs when loitering within a geofence radius.
