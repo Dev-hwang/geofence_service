@@ -14,7 +14,7 @@ dependencies:
 
   geolocator: ^7.0.3
   flutter_foreground_task: ^1.0.8
-  flutter_activity_recognition: ^1.0.0
+  flutter_activity_recognition: ^1.0.1
 
 dev_dependencies:
   flutter_test:
