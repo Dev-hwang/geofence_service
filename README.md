@@ -9,7 +9,7 @@ This plugin is a geofence service with activity recognition API. It does not use
 * `GeofenceService` can perform geo-fencing in real time and catch errors during operation.
 * `GeofenceService` can be operated in the background using `WillStartForegroundTask` widget.
 
-**WAIT!:** This plugin performs geo-fencing based on a circular geofence. If you want to create a polygon geofence, this [plugin](https://pub.dev/packages/poly_geofence_service) is recommended.
+**WAIT**: This plugin performs geo-fencing based on a circular geofence. If you want to create a polygon geofence, this [plugin](https://pub.dev/packages/poly_geofence_service) is recommended.
 
 ## Getting started
 
@@ -29,6 +29,15 @@ Since geo-fencing operates based on location, we need to add the following permi
 ```
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+```
+
+And specify the service inside the `<application>` tag as follows.
+
+```
+<service
+    android:name="com.pravera.geofence_service.service.LocationProviderIntentService"
+    android:permission="android.permission.BIND_JOB_SERVICE"
+    android:stopWithTask="true" />
 ```
 
 In addition, if you want to run the service in the background, add the following permission. If your project supports Android 10, be sure to add the `ACCESS_BACKGROUND_LOCATION` permission.
@@ -107,15 +116,15 @@ To detect changes in user activity, add the following permissions.
 * `geofenceRadiusSortType`: Sets the sort type of the geofence radius. The default is `GeofenceRadiusSortType.DESC`.
 
 ```dart
+// Create a [GeofenceService] instance and set options.
 final _geofenceService = GeofenceService.instance.setup(
-  interval: 5000,
-  accuracy: 100,
-  loiteringDelayMs: 60000,
-  statusChangeDelayMs: 10000,
-  useActivityRecognition: true,
-  allowMockLocations: false,
-  geofenceRadiusSortType: GeofenceRadiusSortType.DESC
-);
+    interval: 5000,
+    accuracy: 100,
+    loiteringDelayMs: 60000,
+    statusChangeDelayMs: 10000,
+    useActivityRecognition: true,
+    allowMockLocations: false,
+    geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
 ```
 
 2. Create a `Geofence` and `GeofenceRadius` list. `Geofence` and `GeofenceRadius` provides the following parameters:
@@ -127,6 +136,7 @@ final _geofenceService = GeofenceService.instance.setup(
 * `length`: The length of the radius in meters. The best result should be set between 100 and 150 meters in radius. If Wi-FI is available, it can be set up to 20~40m.
 
 ```dart
+// Create a [Geofence] list.
 final _geofenceList = <Geofence>[
   Geofence(
     id: 'place_1',
@@ -155,6 +165,7 @@ final _geofenceList = <Geofence>[
 3. Register the listener and call `GeofenceService.instance.start()`.
 
 ```dart
+// This function is to be called when the geofence status is changed.
 Future<void> _onGeofenceStatusChanged(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
@@ -166,12 +177,25 @@ Future<void> _onGeofenceStatusChanged(
   _geofenceStreamController.sink.add(geofence);
 }
 
+// This function is to be called when the activity has changed.
 void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   dev.log('prevActivity: ${prevActivity.toMap()}');
   dev.log('currActivity: ${currActivity.toMap()}\n');
   _activityStreamController.sink.add(currActivity);
 }
 
+// This function is to be called when the position has changed.
+void _onPositionChanged(Position position) {
+  dev.log('position: ${position.toJson()}');
+}
+
+// This function is to be called when a location service status change occurs
+// since the service was started.
+void _onLocationServiceStatusChanged(bool status) {
+  dev.log('location service status: $status');
+}
+
+// This function is used to handle errors that occur in the service.
 void _onError(error) {
   final errorCode = getErrorCodesFromError(error);
   if (errorCode == null) {
@@ -187,6 +211,8 @@ void initState() {
   super.initState();
   WidgetsBinding.instance?.addPostFrameCallback((_) {
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+    _geofenceService.addPositionChangeListener(_onPositionChanged);
+    _geofenceService.addLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
     _geofenceService.addActivityChangeListener(_onActivityChanged);
     _geofenceService.addStreamErrorListener(_onError);
     _geofenceService.start(_geofenceList).catchError(_onError);
@@ -255,6 +281,8 @@ _geofenceService.resume();
 
 ```text
 _geofenceService.removeGeofenceStatusChangeListener(onGeofenceStatusChanged);
+_geofenceService.removePositionChangeListener(_onPositionChanged);
+_geofenceService.removeLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
 _geofenceService.removeActivityChangeListener(onActivityChanged);
 _geofenceService.removeStreamErrorListener(onError);
 _geofenceService.stop();
