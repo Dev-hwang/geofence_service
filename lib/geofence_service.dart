@@ -8,6 +8,7 @@ import 'package:geofence_service/models/error_codes.dart';
 import 'package:geofence_service/models/geofence.dart';
 import 'package:geofence_service/models/geofence_radius.dart';
 import 'package:geofence_service/models/geofence_radius_sort_type.dart';
+import 'package:geofence_service/models/geofence_service_options.dart';
 import 'package:geofence_service/models/geofence_status.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -17,6 +18,7 @@ export 'package:geofence_service/models/error_codes.dart';
 export 'package:geofence_service/models/geofence.dart';
 export 'package:geofence_service/models/geofence_radius.dart';
 export 'package:geofence_service/models/geofence_radius_sort_type.dart';
+export 'package:geofence_service/models/geofence_service_options.dart';
 export 'package:geofence_service/models/geofence_status.dart';
 export 'package:geolocator/geolocator.dart';
 
@@ -45,36 +47,7 @@ class GeofenceService {
   /// Returns whether the service is running.
   bool get isRunningService => _isRunningService;
 
-  /// The time interval in milliseconds to check the geofence status.
-  /// The default is `5000`.
-  int _interval = 5000;
-
-  /// Geo-fencing error range in meters.
-  /// The default is `100`.
-  int _accuracy = 100;
-
-  /// Sets the delay between [GeofenceStatus.ENTER] and [GeofenceStatus.DWELL] in milliseconds.
-  /// The default is `300000`.
-  int _loiteringDelayMs = 300000;
-
-  /// Sets the status change delay in milliseconds.
-  /// [GeofenceStatus.ENTER] and [GeofenceStatus.EXIT] events may be called frequently
-  /// when the location is near the boundary of the geofence. Use this option to minimize event calls at this time.
-  /// If the option value is too large, realtime geo-fencing is not possible, so use it carefully.
-  /// The default is `10000`.
-  int _statusChangeDelayMs = 10000;
-
-  /// Whether to use the activity recognition API.
-  /// The default is `true`.
-  bool _useActivityRecognition = true;
-
-  /// Whether to allow mock locations.
-  /// The default is `false`.
-  bool _allowMockLocations = false;
-
-  /// Sets the sort type of the geofence radius.
-  /// The default is `GeofenceRadiusSortType.DESC`.
-  GeofenceRadiusSortType _geofenceRadiusSortType = GeofenceRadiusSortType.DESC;
+  final _options = GeofenceServiceOptions();
 
   StreamSubscription<Position>? _positionStream;
   StreamSubscription<Activity>? _activityStream;
@@ -96,13 +69,13 @@ class GeofenceService {
     bool? allowMockLocations,
     GeofenceRadiusSortType? geofenceRadiusSortType
   }) {
-    _interval = interval ?? _interval;
-    _accuracy = accuracy ?? _accuracy;
-    _loiteringDelayMs = loiteringDelayMs ?? _loiteringDelayMs;
-    _statusChangeDelayMs = statusChangeDelayMs ?? _statusChangeDelayMs;
-    _useActivityRecognition = useActivityRecognition ?? _useActivityRecognition;
-    _allowMockLocations = allowMockLocations ?? _allowMockLocations;
-    _geofenceRadiusSortType = geofenceRadiusSortType ?? _geofenceRadiusSortType;
+    _options.interval = interval;
+    _options.accuracy = accuracy;
+    _options.loiteringDelayMs = loiteringDelayMs;
+    _options.statusChangeDelayMs = statusChangeDelayMs;
+    _options.useActivityRecognition = useActivityRecognition;
+    _options.allowMockLocations = allowMockLocations;
+    _options.geofenceRadiusSortType = geofenceRadiusSortType;
 
     return this;
   }
@@ -232,7 +205,7 @@ class GeofenceService {
     }
 
     // Activity Recognition API 사용 안함
-    if (_useActivityRecognition == false) return;
+    if (_options.useActivityRecognition == false) return;
 
     // Check whether to allow activity recognition permission.
     PermissionRequestResult arPermission = await FlutterActivityRecognition.instance.checkPermission();
@@ -249,11 +222,11 @@ class GeofenceService {
   Future<void> _listenStream() async {
     _positionStream = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
-      intervalDuration: Duration(milliseconds: _interval)
+      intervalDuration: Duration(milliseconds: _options.interval)
     ).handleError(_handleStreamError).listen(_onPositionReceive);
 
     // Activity Recognition API 사용 안함
-    if (_useActivityRecognition == false) return;
+    if (_options.useActivityRecognition == false) return;
 
     _activityStream = FlutterActivityRecognition.instance.getActivityStream()
         .handleError(_handleStreamError).listen(_onActivityReceive);
@@ -268,8 +241,8 @@ class GeofenceService {
   }
 
   void _onPositionReceive(Position position) async {
-    if (!_allowMockLocations && position.isMocked) return;
-    if (position.accuracy > _accuracy) return;
+    if (position.isMocked && !_options.allowMockLocations) return;
+    if (position.accuracy > _options.accuracy) return;
 
     // Pause the service and process the position.
     pause();
@@ -298,7 +271,7 @@ class GeofenceService {
 
       // 지오펜스 반경 미터 단위 정렬
       geofenceRadiusList = geofence.radius.toList();
-      if (_geofenceRadiusSortType == GeofenceRadiusSortType.ASC)
+      if (_options.geofenceRadiusSortType == GeofenceRadiusSortType.ASC)
         geofenceRadiusList.sort((a, b) => a.length.compareTo(b.length));
       else
         geofenceRadiusList.sort((a, b) => b.length.compareTo(a.length));
@@ -315,7 +288,7 @@ class GeofenceService {
         if (geoRemainingDistance <= geofenceRadius.length) {
           geofenceStatus = GeofenceStatus.ENTER;
 
-          if ((diffTimestamp.inMilliseconds > _loiteringDelayMs
+          if ((diffTimestamp.inMilliseconds > _options.loiteringDelayMs
               && geofenceRadius.status == GeofenceStatus.ENTER)
               || geofenceRadius.status == GeofenceStatus.DWELL) {
             geofenceStatus = GeofenceStatus.DWELL;
@@ -330,7 +303,7 @@ class GeofenceService {
 
         // 상태 변경이 빈번하게 발생하지 않도록 딜레이 적용
         if (radTimestamp != null
-            && diffTimestamp.inMilliseconds < _statusChangeDelayMs) continue;
+            && diffTimestamp.inMilliseconds < _options.statusChangeDelayMs) continue;
 
         // 지오펜스 반경 상태 업데이트
         if (!geofenceRadius.updateStatus(geofenceStatus, _activity, position))
