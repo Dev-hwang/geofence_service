@@ -17,14 +17,13 @@ class _ExampleAppState extends State<ExampleApp> {
 
   // Create a [GeofenceService] instance and set options.
   final _geofenceService = GeofenceService.instance.setup(
-    interval: 5000,
-    accuracy: 100,
-    loiteringDelayMs: 60000,
-    statusChangeDelayMs: 10000,
-    useActivityRecognition: true,
-    allowMockLocations: false,
-    geofenceRadiusSortType: GeofenceRadiusSortType.DESC
-  );
+      interval: 5000,
+      accuracy: 100,
+      loiteringDelayMs: 60000,
+      statusChangeDelayMs: 10000,
+      useActivityRecognition: true,
+      allowMockLocations: false,
+      geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
 
   // Create a [Geofence] list.
   final _geofenceList = <Geofence>[
@@ -51,6 +50,7 @@ class _ExampleAppState extends State<ExampleApp> {
     ),
   ];
 
+  // This function is to be called when the geofence status is changed.
   Future<void> _onGeofenceStatusChanged(
       Geofence geofence,
       GeofenceRadius geofenceRadius,
@@ -62,12 +62,25 @@ class _ExampleAppState extends State<ExampleApp> {
     _geofenceStreamController.sink.add(geofence);
   }
 
+  // This function is to be called when the activity has changed.
   void _onActivityChanged(Activity prevActivity, Activity currActivity) {
     dev.log('prevActivity: ${prevActivity.toMap()}');
     dev.log('currActivity: ${currActivity.toMap()}\n');
     _activityStreamController.sink.add(currActivity);
   }
 
+  // This function is to be called when the position has changed.
+  void _onPositionChanged(Position position) {
+    dev.log('position: ${position.toJson()}');
+  }
+
+  // This function is to be called when a location service status change occurs
+  // since the service was started.
+  void _onLocationServiceStatusChanged(bool status) {
+    dev.log('location service status: $status');
+  }
+
+  // This function is used to handle errors that occur in the service.
   void _onError(error) {
     final errorCode = getErrorCodesFromError(error);
     if (errorCode == null) {
@@ -83,6 +96,8 @@ class _ExampleAppState extends State<ExampleApp> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+      _geofenceService.addPositionChangeListener(_onPositionChanged);
+      _geofenceService.addLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
       _geofenceService.addActivityChangeListener(_onActivityChanged);
       _geofenceService.addStreamErrorListener(_onError);
       _geofenceService.start(_geofenceList).catchError(_onError);
