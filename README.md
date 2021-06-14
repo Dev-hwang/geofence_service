@@ -113,6 +113,7 @@ To detect changes in user activity, add the following permissions.
 * `statusChangeDelayMs`: Sets the status change delay in milliseconds. `GeofenceStatus.ENTER` and `GeofenceStatus.EXIT` events may be called frequently when the location is near the boundary of the geofence. Use this option to minimize event calls at this time. If the option value is too large, realtime geo-fencing is not possible, so use it carefully. The default is `10000`.
 * `useActivityRecognition`: Whether to use the activity recognition API. The default is `true`.
 * `allowMockLocations`: Whether to allow mock locations. The default is `false`.
+* `printDevLog`: Whether to show the developer log. If this value is set to true, logs for geofence service activities (start, stop, etc.) can be viewed. It does not work in release mode. The default is `false`.
 * `geofenceRadiusSortType`: Sets the sort type of the geofence radius. The default is `GeofenceRadiusSortType.DESC`.
 
 ```dart
@@ -124,6 +125,7 @@ final _geofenceService = GeofenceService.instance.setup(
     statusChangeDelayMs: 10000,
     useActivityRecognition: true,
     allowMockLocations: false,
+    printDevLog: false,
     geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
 ```
 
@@ -171,39 +173,39 @@ Future<void> _onGeofenceStatusChanged(
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus,
     Position position) async {
-  dev.log('geofence: ${geofence.toMap()}');
-  dev.log('geofenceRadius: ${geofenceRadius.toMap()}');
-  dev.log('geofenceStatus: ${geofenceStatus.toString()}\n');
+  print('geofence: ${geofence.toMap()}');
+  print('geofenceRadius: ${geofenceRadius.toMap()}');
+  print('geofenceStatus: ${geofenceStatus.toString()}\n');
   _geofenceStreamController.sink.add(geofence);
 }
 
 // This function is to be called when the activity has changed.
 void _onActivityChanged(Activity prevActivity, Activity currActivity) {
-  dev.log('prevActivity: ${prevActivity.toMap()}');
-  dev.log('currActivity: ${currActivity.toMap()}\n');
+  print('prevActivity: ${prevActivity.toMap()}');
+  print('currActivity: ${currActivity.toMap()}\n');
   _activityStreamController.sink.add(currActivity);
 }
 
 // This function is to be called when the position has changed.
 void _onPositionChanged(Position position) {
-  dev.log('position: ${position.toJson()}');
+  print('position: ${position.toJson()}');
 }
 
 // This function is to be called when a location service status change occurs
 // since the service was started.
 void _onLocationServiceStatusChanged(bool status) {
-  dev.log('location service status: $status');
+  print('location service status: $status');
 }
 
 // This function is used to handle errors that occur in the service.
 void _onError(error) {
   final errorCode = getErrorCodesFromError(error);
   if (errorCode == null) {
-    dev.log('Undefined error: $error');
+    print('Undefined error: $error');
     return;
   }
   
-  dev.log('ErrorCode: $errorCode');
+  print('ErrorCode: $errorCode');
 }
 
 @override

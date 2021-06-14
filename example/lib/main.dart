@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
@@ -23,6 +22,7 @@ class _ExampleAppState extends State<ExampleApp> {
       statusChangeDelayMs: 10000,
       useActivityRecognition: true,
       allowMockLocations: false,
+      printDevLog: false,
       geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
 
   // Create a [Geofence] list.
@@ -56,39 +56,39 @@ class _ExampleAppState extends State<ExampleApp> {
       GeofenceRadius geofenceRadius,
       GeofenceStatus geofenceStatus,
       Position position) async {
-    dev.log('geofence: ${geofence.toJson()}');
-    dev.log('geofenceRadius: ${geofenceRadius.toJson()}');
-    dev.log('geofenceStatus: ${geofenceStatus.toString()}\n');
+    print('geofence: ${geofence.toJson()}');
+    print('geofenceRadius: ${geofenceRadius.toJson()}');
+    print('geofenceStatus: ${geofenceStatus.toString()}\n');
     _geofenceStreamController.sink.add(geofence);
   }
 
   // This function is to be called when the activity has changed.
   void _onActivityChanged(Activity prevActivity, Activity currActivity) {
-    dev.log('prevActivity: ${prevActivity.toMap()}');
-    dev.log('currActivity: ${currActivity.toMap()}\n');
+    print('prevActivity: ${prevActivity.toMap()}');
+    print('currActivity: ${currActivity.toMap()}\n');
     _activityStreamController.sink.add(currActivity);
   }
 
   // This function is to be called when the position has changed.
   void _onPositionChanged(Position position) {
-    dev.log('position: ${position.toJson()}');
+    print('position: ${position.toJson()}');
   }
 
   // This function is to be called when a location service status change occurs
   // since the service was started.
   void _onLocationServiceStatusChanged(bool status) {
-    dev.log('location service status: $status');
+    print('location service status: $status');
   }
 
   // This function is used to handle errors that occur in the service.
   void _onError(error) {
     final errorCode = getErrorCodesFromError(error);
     if (errorCode == null) {
-      dev.log('Undefined error: $error');
+      print('Undefined error: $error');
       return;
     }
 
-    dev.log('ErrorCode: $errorCode');
+    print('ErrorCode: $errorCode');
   }
 
   @override

@@ -73,6 +73,7 @@ class GeofenceService {
       int? statusChangeDelayMs,
       bool? useActivityRecognition,
       bool? allowMockLocations,
+      bool? printDevLog,
       GeofenceRadiusSortType? geofenceRadiusSortType}) {
     _options.interval = interval;
     _options.accuracy = accuracy;
@@ -80,6 +81,7 @@ class GeofenceService {
     _options.statusChangeDelayMs = statusChangeDelayMs;
     _options.useActivityRecognition = useActivityRecognition;
     _options.allowMockLocations = allowMockLocations;
+    _options.printDevLog = printDevLog;
     _options.geofenceRadiusSortType = geofenceRadiusSortType;
 
     return this;
@@ -97,7 +99,7 @@ class GeofenceService {
     if (geofenceList != null) _geofenceList.addAll(geofenceList);
 
     _isRunningService = true;
-    if (!kReleaseMode) dev.log('GeofenceService started.');
+    _printDevLog('GeofenceService started.');
   }
 
   /// Stop [GeofenceService].
@@ -108,81 +110,103 @@ class GeofenceService {
     _geofenceList.clear();
 
     _isRunningService = false;
-    if (!kReleaseMode) dev.log('GeofenceService stopped.');
+    _printDevLog('GeofenceService stopped.');
   }
 
   /// Pause [GeofenceService].
   void pause() {
     _positionStream?.pause();
     _activityStream?.pause();
-    // if (!kReleaseMode) dev.log('GeofenceService paused.');
+    _printDevLog('GeofenceService paused.');
   }
 
   /// Resume [GeofenceService].
   void resume() {
     _positionStream?.resume();
     _activityStream?.resume();
-    // if (!kReleaseMode) dev.log('GeofenceService resumed.');
+    _printDevLog('GeofenceService resumed.');
   }
 
   /// Register a closure to be called when the [GeofenceStatus] changes.
   void addGeofenceStatusChangeListener(GeofenceStatusChanged listener) {
     _geofenceStatusChangeListeners.add(listener);
+    _printDevLog(
+        'Added GeofenceStatusChange listener. (size: ${_geofenceStatusChangeListeners.length})');
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when the [GeofenceStatus] changes.
   void removeGeofenceStatusChangeListener(GeofenceStatusChanged listener) {
     _geofenceStatusChangeListeners.remove(listener);
+    _printDevLog(
+        'The GeofenceStatusChange listener has been removed. (size: ${_geofenceStatusChangeListeners.length})');
   }
 
   /// Register a closure to be called when the [Activity] changes.
   void addActivityChangeListener(ActivityChanged listener) {
     _activityChangeListeners.add(listener);
+    _printDevLog(
+        'Added ActivityChange listener. (size: ${_activityChangeListeners.length})');
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when the [Activity] changes.
   void removeActivityChangeListener(ActivityChanged listener) {
     _activityChangeListeners.remove(listener);
+    _printDevLog(
+        'The ActivityChange listener has been removed. (size: ${_activityChangeListeners.length})');
   }
 
   /// Register a closure to be called when the [Position] changes.
   void addPositionChangeListener(ValueChanged<Position> listener) {
     _positionChangeListeners.add(listener);
+    _printDevLog(
+        'Added PositionChange listener. (size: ${_positionChangeListeners.length})');
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when the [Position] changes.
   void removePositionChangeListener(ValueChanged<Position> listener) {
     _positionChangeListeners.remove(listener);
+    _printDevLog(
+        'The PositionChange listener has been removed. (size: ${_positionChangeListeners.length})');
   }
 
   /// Register a closure to be called when the location service status changes.
   void addLocationServiceStatusChangeListener(ValueChanged<bool> listener) {
     _locationServiceStatusChangeListeners.add(listener);
+    _printDevLog(
+        'Added LocationServiceStatusChange listener. (size: ${_locationServiceStatusChangeListeners.length})');
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when the location service status changes.
   void removeLocationServiceStatusChangeListener(ValueChanged<bool> listener) {
     _locationServiceStatusChangeListeners.remove(listener);
+    _printDevLog(
+        'The LocationServiceStatusChange listener has been removed. (size: ${_locationServiceStatusChangeListeners.length})');
   }
 
   /// Register a closure to be called when a stream error occurs.
   void addStreamErrorListener(ValueChanged listener) {
     _streamErrorListeners.add(listener);
+    _printDevLog(
+        'Added StreamError listener. (size: ${_streamErrorListeners.length})');
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when a stream error occurs.
   void removeStreamErrorListener(ValueChanged listener) {
     _streamErrorListeners.remove(listener);
+    _printDevLog(
+        'The StreamError listener has been removed. (size: ${_streamErrorListeners.length})');
   }
 
   /// Add geofence.
   void addGeofence(Geofence geofence) {
     _geofenceList.add(geofence);
+    _printDevLog(
+        'Added Geofence(${geofence.id}) (size: ${_geofenceList.length})');
   }
 
   /// Add geofence list.
@@ -193,6 +217,8 @@ class GeofenceService {
   /// Remove geofence.
   void removeGeofence(Geofence geofence) {
     _geofenceList.remove(geofence);
+    _printDevLog(
+        'The Geofence(${geofence.id}) has been removed. (size: ${_geofenceList.length})');
   }
 
   /// Remove geofence list.
@@ -204,11 +230,14 @@ class GeofenceService {
   /// Remove geofence by [id].
   void removeGeofenceById(String id) {
     _geofenceList.removeWhere((geofence) => geofence.id == id);
+    _printDevLog(
+        'The Geofence($id) has been removed. (size: ${_geofenceList.length})');
   }
 
   /// Clear geofence list.
   void clearGeofenceList() {
     _geofenceList.clear();
+    _printDevLog('The GeofenceList has been cleared.');
   }
 
   Future<void> _checkPermissions() async {
@@ -374,5 +403,13 @@ class GeofenceService {
 
   void _handleStreamError(dynamic error) {
     for (final listener in _streamErrorListeners) listener(error);
+  }
+
+  void _printDevLog(String message) {
+    if (kReleaseMode) return;
+    if (!_options.printDevLog) return;
+
+    final nowDateTime = DateTime.now().toString();
+    dev.log('$nowDateTime\t$message');
   }
 }

@@ -29,6 +29,12 @@ class GeofenceServiceOptions {
   /// The default is `false`.
   bool _allowMockLocations = false;
 
+  /// Whether to show the developer log.
+  /// If this value is set to true, logs for geofence service activities (start, stop, etc.) can be viewed.
+  /// It does not work in release mode.
+  /// The default is `false`.
+  bool _printDevLog = false;
+
   /// Sets the sort type of the geofence radius.
   /// The default is `GeofenceRadiusSortType.DESC`.
   GeofenceRadiusSortType _geofenceRadiusSortType = GeofenceRadiusSortType.DESC;
@@ -54,6 +60,9 @@ class GeofenceServiceOptions {
   bool get allowMockLocations => _allowMockLocations;
   set allowMockLocations(bool? value) =>
       _allowMockLocations = value ?? _allowMockLocations;
+
+  bool get printDevLog => _printDevLog;
+  set printDevLog(bool? value) => _printDevLog = value ?? _printDevLog;
 
   GeofenceRadiusSortType get geofenceRadiusSortType => _geofenceRadiusSortType;
   set geofenceRadiusSortType(GeofenceRadiusSortType? value) =>
