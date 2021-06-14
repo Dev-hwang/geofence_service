@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:geofence_service/models/error_codes.dart';
 import 'package:geofence_service/models/geofence.dart';
@@ -48,13 +49,18 @@ class GeofenceService {
 
   final _options = GeofenceServiceOptions();
 
+  final _locationServiceStatusChangeEventChannel =
+      const EventChannel('geofence_service/location_service_status');
+
   StreamSubscription<Position>? _positionStream;
+  StreamSubscription<bool>? _locationServiceStatusStream;
   StreamSubscription<Activity>? _activityStream;
   Activity _activity = Activity.unknown;
 
   final _geofenceList = <Geofence>[];
   final _geofenceStatusChangeListeners = <GeofenceStatusChanged>[];
   final _positionChangeListeners = <ValueChanged<Position>>[];
+  final _locationServiceStatusChangeListeners = <ValueChanged<bool>>[];
   final _activityChangeListeners = <ActivityChanged>[];
   final _streamErrorListeners = <ValueChanged>[];
 
@@ -152,6 +158,17 @@ class GeofenceService {
     _positionChangeListeners.remove(listener);
   }
 
+  /// Register a closure to be called when the location service status changes.
+  void addLocationServiceStatusChangeListener(ValueChanged<bool> listener) {
+    _locationServiceStatusChangeListeners.add(listener);
+  }
+
+  /// Remove a previously registered closure from the list of closures that
+  /// are notified when the location service status changes.
+  void removeLocationServiceStatusChangeListener(ValueChanged<bool> listener) {
+    _locationServiceStatusChangeListeners.remove(listener);
+  }
+
   /// Register a closure to be called when a stream error occurs.
   void addStreamErrorListener(ValueChanged listener) {
     _streamErrorListeners.add(listener);
@@ -170,8 +187,7 @@ class GeofenceService {
 
   /// Add geofence list.
   void addGeofenceList(List<Geofence> geofenceList) {
-    for (var i = 0; i < geofenceList.length; i++)
-      addGeofence(geofenceList[i]);
+    for (var i = 0; i < geofenceList.length; i++) addGeofence(geofenceList[i]);
   }
 
   /// Remove geofence.
@@ -238,6 +254,11 @@ class GeofenceService {
         .handleError(_handleStreamError)
         .listen(_onPositionReceive);
 
+    _locationServiceStatusStream = _locationServiceStatusChangeEventChannel
+        .receiveBroadcastStream()
+        .map((event) => event == true)
+        .listen(_onLocationServiceStatusChange);
+
     // Activity Recognition API 사용 안함
     if (_options.useActivityRecognition == false) return;
 
@@ -250,6 +271,9 @@ class GeofenceService {
   Future<void> _cancelStream() async {
     await _positionStream?.cancel();
     _positionStream = null;
+
+    await _locationServiceStatusStream?.cancel();
+    _locationServiceStatusStream = null;
 
     await _activityStream?.cancel();
     _activityStream = null;
@@ -333,6 +357,11 @@ class GeofenceService {
 
     // Service resumes when position processing is complete.
     _positionStream?.resume();
+  }
+
+  void _onLocationServiceStatusChange(bool status) {
+    for (final listener in _locationServiceStatusChangeListeners)
+      listener(status);
   }
 
   void _onActivityReceive(Activity activity) {
