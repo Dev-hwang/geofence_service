@@ -56,8 +56,8 @@ class _ExampleAppState extends State<ExampleApp> {
       GeofenceRadius geofenceRadius,
       GeofenceStatus geofenceStatus,
       Position position) async {
-    dev.log('geofence: ${geofence.toMap()}');
-    dev.log('geofenceRadius: ${geofenceRadius.toMap()}');
+    dev.log('geofence: ${geofence.toJson()}');
+    dev.log('geofenceRadius: ${geofenceRadius.toJson()}');
     dev.log('geofenceStatus: ${geofenceStatus.toString()}\n');
     _geofenceStreamController.sink.add(geofence);
   }
@@ -164,7 +164,7 @@ class _ExampleAppState extends State<ExampleApp> {
       stream: _geofenceStreamController.stream,
       builder: (context, snapshot) {
         final updatedDateTime = DateTime.now();
-        final content = snapshot.data?.toMap().toString() ?? '';
+        final content = snapshot.data?.toJson().toString() ?? '';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

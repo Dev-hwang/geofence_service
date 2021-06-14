@@ -50,8 +50,8 @@ class GeofenceRadius {
       : assert(id.isNotEmpty),
         assert(length > 0.0);
 
-  /// Returns the data fields of [GeofenceRadius] in [Map] format.
-  Map<String, dynamic> toMap() {
+  /// Returns the data fields of [GeofenceRadius] in JSON format.
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'data': data,

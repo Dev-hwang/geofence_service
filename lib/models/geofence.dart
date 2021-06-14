@@ -40,14 +40,14 @@ class Geofence {
       : assert(id.isNotEmpty),
         assert(radius.isNotEmpty);
 
-  /// Returns the data fields of [Geofence] in [Map] format.
-  Map<String, dynamic> toMap() {
+  /// Returns the data fields of [Geofence] in JSON format.
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'data': data,
       'latitude': latitude,
       'longitude': longitude,
-      'radius': radius.map((e) => e.toMap()).toList(),
+      'radius': radius.map((e) => e.toJson()).toList(),
       'status': status,
       'timestamp': timestamp,
       'remainingDistance': _remainingDistance
