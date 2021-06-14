@@ -54,6 +54,7 @@ class GeofenceService {
 
   final _geofenceList = <Geofence>[];
   final _geofenceStatusChangeListeners = <GeofenceStatusChanged>[];
+  final _positionChangeListeners = <ValueChanged<Position>>[];
   final _activityChangeListeners = <ActivityChanged>[];
   final _streamErrorListeners = <ValueChanged>[];
 
@@ -138,6 +139,17 @@ class GeofenceService {
   /// are notified when the [Activity] changes.
   void removeActivityChangeListener(ActivityChanged listener) {
     _activityChangeListeners.remove(listener);
+  }
+
+  /// Register a closure to be called when the [Position] changes.
+  void addPositionChangeListener(ValueChanged<Position> listener) {
+    _positionChangeListeners.add(listener);
+  }
+
+  /// Remove a previously registered closure from the list of closures that
+  /// are notified when the [Position] changes.
+  void removePositionChangeListener(ValueChanged<Position> listener) {
+    _positionChangeListeners.remove(listener);
   }
 
   /// Register a closure to be called when a stream error occurs.
@@ -246,6 +258,8 @@ class GeofenceService {
   void _onPositionReceive(Position position) async {
     if (position.isMocked && !_options.allowMockLocations) return;
     if (position.accuracy > _options.accuracy) return;
+
+    for (final listener in _positionChangeListeners) listener(position);
 
     // Pause the service and process the position.
     _positionStream?.pause();
