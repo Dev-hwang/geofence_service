@@ -1,3 +1,36 @@
+## 3.1.0
+
+* Upgrade geolocator: ^7.1.0
+* Upgrade flutter_activity_recognition: ^1.0.2
+* Add `addPositionChangeListener` function.
+* Add `removePositionChangeListener` function.
+* Add `addLocationServiceStatusChangeListener` function.
+* Add `removeLocationServiceStatusChangeListener` function.
+> A service has been added to check the location service status change while the geofence service is running. 
+You need to add the code below to your android manifest file. See the Getting started section of the readme for details.
+```xml
+<service
+    android:name="com.pravera.geofence_service.service.LocationProviderIntentService"
+    android:permission="android.permission.BIND_JOB_SERVICE"
+    android:stopWithTask="true" />
+```
+* Add `printDevLog` option.
+* Change the model's `toMap` function name to `toJson`.
+* Update example
+* Update README.md
+* Rename the listener function.
+```text
+// addGeofenceStatusChangedListener(_onGeofenceStatusChanged);
+// addActivityChangedListener(_onActivityChanged);
+// removeGeofenceStatusChangedListener(onGeofenceStatusChanged);
+// removeActivityChangedListener(onActivityChanged);
+
+addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+addActivityChangeListener(_onActivityChanged);
+removeGeofenceStatusChangeListener(onGeofenceStatusChanged);
+removeActivityChangeListener(onActivityChanged);
+```
+
 ## 3.0.4
 
 * Upgrade flutter_foreground_task: ^1.0.8
