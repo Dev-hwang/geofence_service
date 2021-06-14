@@ -64,8 +64,8 @@ class _ExampleAppState extends State<ExampleApp> {
 
   // This function is to be called when the activity has changed.
   void _onActivityChanged(Activity prevActivity, Activity currActivity) {
-    print('prevActivity: ${prevActivity.toMap()}');
-    print('currActivity: ${currActivity.toMap()}\n');
+    print('prevActivity: ${prevActivity.toJson()}');
+    print('currActivity: ${currActivity.toJson()}\n');
     _activityStreamController.sink.add(currActivity);
   }
 
@@ -158,7 +158,7 @@ class _ExampleAppState extends State<ExampleApp> {
       stream: _activityStreamController.stream,
       builder: (context, snapshot) {
         final updatedDateTime = DateTime.now();
-        final content = snapshot.data?.toMap().toString() ?? '';
+        final content = snapshot.data?.toJson().toString() ?? '';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

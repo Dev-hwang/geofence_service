@@ -181,8 +181,8 @@ Future<void> _onGeofenceStatusChanged(
 
 // This function is to be called when the activity has changed.
 void _onActivityChanged(Activity prevActivity, Activity currActivity) {
-  print('prevActivity: ${prevActivity.toMap()}');
-  print('currActivity: ${currActivity.toMap()}\n');
+  print('prevActivity: ${prevActivity.toJson()}');
+  print('currActivity: ${currActivity.toJson()}\n');
   _activityStreamController.sink.add(currActivity);
 }
 
