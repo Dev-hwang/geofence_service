@@ -31,13 +31,13 @@ class Geofence {
   double? get remainingDistance => _remainingDistance;
 
   /// Constructs an instance of [Geofence].
-  Geofence({
-    required this.id,
-    this.data,
-    required this.latitude,
-    required this.longitude,
-    required this.radius
-  })  : assert(id.isNotEmpty),
+  Geofence(
+      {required this.id,
+      this.data,
+      required this.latitude,
+      required this.longitude,
+      required this.radius})
+      : assert(id.isNotEmpty),
         assert(radius.isNotEmpty);
 
   /// Returns the data fields of [Geofence] in [Map] format.
@@ -56,15 +56,15 @@ class Geofence {
 
   /// Update the remaining distance of [Geofence].
   void updateRemainingDistance(double distance) {
-    if (distance < 0.0)
-      _remainingDistance = 0.0;
+    if (distance < 0.0) _remainingDistance = 0.0;
     _remainingDistance = distance;
   }
 
   /// Gets the status of [Geofence].
   GeofenceStatus _getStatus() {
     final innerRadius = radius.where((e) => e.status != GeofenceStatus.EXIT);
-    final dwellRadius = innerRadius.where((e) => e.status == GeofenceStatus.DWELL);
+    final dwellRadius =
+        innerRadius.where((e) => e.status == GeofenceStatus.DWELL);
 
     if (innerRadius.isNotEmpty)
       return dwellRadius.isNotEmpty
@@ -78,10 +78,9 @@ class Geofence {
   DateTime? _getTimestamp() {
     final timestampList = <DateTime>[];
     DateTime? timestamp;
-    for (int i=0; i<radius.length; i++) {
+    for (var i = 0; i < radius.length; i++) {
       timestamp = radius[i].timestamp;
-      if (timestamp != null)
-        timestampList.add(timestamp);
+      if (timestamp != null) timestampList.add(timestamp);
     }
 
     timestampList.sort((a, b) => a.compareTo(b));

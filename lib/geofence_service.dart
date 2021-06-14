@@ -31,8 +31,7 @@ typedef GeofenceStatusChanged = Future<void> Function(
 
 /// Function to notify activity changes.
 typedef ActivityChanged = void Function(
-    Activity prevActivity,
-    Activity currActivity);
+    Activity prevActivity, Activity currActivity);
 
 /// A class provides geofence management and geo-fencing.
 class GeofenceService {
@@ -60,15 +59,14 @@ class GeofenceService {
 
   /// Setup [GeofenceService].
   /// Some options do not change while the service is running.
-  GeofenceService setup({
-    int? interval,
-    int? accuracy,
-    int? loiteringDelayMs,
-    int? statusChangeDelayMs,
-    bool? useActivityRecognition,
-    bool? allowMockLocations,
-    GeofenceRadiusSortType? geofenceRadiusSortType
-  }) {
+  GeofenceService setup(
+      {int? interval,
+      int? accuracy,
+      int? loiteringDelayMs,
+      int? statusChangeDelayMs,
+      bool? useActivityRecognition,
+      bool? allowMockLocations,
+      GeofenceRadiusSortType? geofenceRadiusSortType}) {
     _options.interval = interval;
     _options.accuracy = accuracy;
     _options.loiteringDelayMs = loiteringDelayMs;
@@ -83,15 +81,13 @@ class GeofenceService {
   /// Start [GeofenceService].
   /// It can be initialized with [geofenceList].
   Future<void> start([List<Geofence>? geofenceList]) async {
-    if (_isRunningService)
-      return Future.error(ErrorCodes.ALREADY_STARTED);
+    if (_isRunningService) return Future.error(ErrorCodes.ALREADY_STARTED);
 
     await _checkPermissions();
     await _listenStream();
 
     _activity = Activity.unknown;
-    if (geofenceList != null)
-      _geofenceList.addAll(geofenceList);
+    if (geofenceList != null) _geofenceList.addAll(geofenceList);
 
     _isRunningService = true;
     if (!kReleaseMode) dev.log('GeofenceService started.');
@@ -162,7 +158,8 @@ class GeofenceService {
 
   /// Add geofence list.
   void addGeofenceList(List<Geofence> geofenceList) {
-    _geofenceList.addAll(geofenceList);
+    for (var i = 0; i < geofenceList.length; i++)
+      addGeofence(geofenceList[i]);
   }
 
   /// Remove geofence.
@@ -172,7 +169,7 @@ class GeofenceService {
 
   /// Remove geofence list.
   void removeGeofenceList(List<Geofence> geofenceList) {
-    for (int i=0; i<geofenceList.length; i++)
+    for (var i = 0; i < geofenceList.length; i++)
       removeGeofence(geofenceList[i]);
   }
 
@@ -188,7 +185,7 @@ class GeofenceService {
 
   Future<void> _checkPermissions() async {
     // Check that the location service is enabled.
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled)
       return Future.error(ErrorCodes.LOCATION_SERVICE_DISABLED);
 
@@ -208,12 +205,15 @@ class GeofenceService {
     if (_options.useActivityRecognition == false) return;
 
     // Check whether to allow activity recognition permission.
-    PermissionRequestResult arPermission = await FlutterActivityRecognition.instance.checkPermission();
+    PermissionRequestResult arPermission =
+        await FlutterActivityRecognition.instance.checkPermission();
     if (arPermission == PermissionRequestResult.PERMANENTLY_DENIED)
-      return Future.error(ErrorCodes.ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED);
+      return Future.error(
+          ErrorCodes.ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED);
 
     if (arPermission == PermissionRequestResult.DENIED) {
-      arPermission = await FlutterActivityRecognition.instance.requestPermission();
+      arPermission =
+          await FlutterActivityRecognition.instance.requestPermission();
       if (arPermission != PermissionRequestResult.GRANTED)
         return Future.error(ErrorCodes.ACTIVITY_RECOGNITION_PERMISSION_DENIED);
     }
@@ -221,15 +221,18 @@ class GeofenceService {
 
   Future<void> _listenStream() async {
     _positionStream = Geolocator.getPositionStream(
-      desiredAccuracy: LocationAccuracy.best,
-      intervalDuration: Duration(milliseconds: _options.interval)
-    ).handleError(_handleStreamError).listen(_onPositionReceive);
+            desiredAccuracy: LocationAccuracy.best,
+            intervalDuration: Duration(milliseconds: _options.interval))
+        .handleError(_handleStreamError)
+        .listen(_onPositionReceive);
 
     // Activity Recognition API 사용 안함
     if (_options.useActivityRecognition == false) return;
 
-    _activityStream = FlutterActivityRecognition.instance.getActivityStream()
-        .handleError(_handleStreamError).listen(_onActivityReceive);
+    _activityStream = FlutterActivityRecognition.instance
+        .getActivityStream()
+        .handleError(_handleStreamError)
+        .listen(_onActivityReceive);
   }
 
   Future<void> _cancelStream() async {
@@ -245,7 +248,7 @@ class GeofenceService {
     if (position.accuracy > _options.accuracy) return;
 
     // Pause the service and process the position.
-    pause();
+    _positionStream?.pause();
 
     double geoRemainingDistance;
     double radRemainingDistance;
@@ -258,15 +261,12 @@ class GeofenceService {
     DateTime? radTimestamp;
     Duration diffTimestamp;
 
-    for (int i=0; i<_geofenceList.length; i++) {
+    for (var i = 0; i < _geofenceList.length; i++) {
       geofence = _geofenceList[i];
 
       // 지오펜스 남은 거리 계산 및 업데이트
-      geoRemainingDistance = Geolocator.distanceBetween(
-          position.latitude,
-          position.longitude,
-          geofence.latitude,
-          geofence.longitude);
+      geoRemainingDistance = Geolocator.distanceBetween(position.latitude,
+          position.longitude, geofence.latitude, geofence.longitude);
       geofence.updateRemainingDistance(geoRemainingDistance);
 
       // 지오펜스 반경 미터 단위 정렬
@@ -277,7 +277,7 @@ class GeofenceService {
         geofenceRadiusList.sort((a, b) => b.length.compareTo(a.length));
 
       // 지오펜스 반경 처리 시작
-      for (int j=0; j<geofenceRadiusList.length; j++) {
+      for (var j = 0; j < geofenceRadiusList.length; j++) {
         geofenceRadius = geofenceRadiusList[j];
 
         // 지오펜스 반경 상태 업데이트 시간차 계산
@@ -288,9 +288,9 @@ class GeofenceService {
         if (geoRemainingDistance <= geofenceRadius.length) {
           geofenceStatus = GeofenceStatus.ENTER;
 
-          if ((diffTimestamp.inMilliseconds > _options.loiteringDelayMs
-              && geofenceRadius.status == GeofenceStatus.ENTER)
-              || geofenceRadius.status == GeofenceStatus.DWELL) {
+          if ((diffTimestamp.inMilliseconds > _options.loiteringDelayMs &&
+                  geofenceRadius.status == GeofenceStatus.ENTER) ||
+              geofenceRadius.status == GeofenceStatus.DWELL) {
             geofenceStatus = GeofenceStatus.DWELL;
           }
         } else {
@@ -302,8 +302,9 @@ class GeofenceService {
         geofenceRadius.updateRemainingDistance(radRemainingDistance);
 
         // 상태 변경이 빈번하게 발생하지 않도록 딜레이 적용
-        if (radTimestamp != null
-            && diffTimestamp.inMilliseconds < _options.statusChangeDelayMs) continue;
+        if (radTimestamp != null &&
+            diffTimestamp.inMilliseconds < _options.statusChangeDelayMs)
+          continue;
 
         // 지오펜스 반경 상태 업데이트
         if (!geofenceRadius.updateStatus(geofenceStatus, _activity, position))
@@ -317,7 +318,7 @@ class GeofenceService {
     }
 
     // Service resumes when position processing is complete.
-    resume();
+    _positionStream?.resume();
   }
 
   void _onActivityReceive(Activity activity) {
@@ -329,7 +330,6 @@ class GeofenceService {
   }
 
   void _handleStreamError(dynamic error) {
-    for (final listener in _streamErrorListeners)
-      listener(error);
+    for (final listener in _streamErrorListeners) listener(error);
   }
 }

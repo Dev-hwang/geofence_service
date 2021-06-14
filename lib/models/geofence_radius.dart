@@ -46,11 +46,8 @@ class GeofenceRadius {
   double? get remainingDistance => _remainingDistance;
 
   /// Constructs an instance of [GeofenceRadius].
-  GeofenceRadius({
-    required this.id,
-    this.data,
-    required this.length
-  })  : assert(id.isNotEmpty),
+  GeofenceRadius({required this.id, this.data, required this.length})
+      : assert(id.isNotEmpty),
         assert(length > 0.0);
 
   /// Returns the data fields of [GeofenceRadius] in [Map] format.
@@ -69,8 +66,7 @@ class GeofenceRadius {
 
   /// Update the remaining distance of [GeofenceRadius].
   void updateRemainingDistance(double distance) {
-    if (distance < 0.0)
-      _remainingDistance = 0.0;
+    if (distance < 0.0) _remainingDistance = 0.0;
     _remainingDistance = distance;
   }
 
