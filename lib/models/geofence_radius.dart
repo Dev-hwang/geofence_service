@@ -57,7 +57,7 @@ class GeofenceRadius {
       'data': data,
       'length': length,
       'status': _status,
-      'activity': _activity?.toMap(),
+      'activity': _activity?.toJson(),
       'speed': _speed,
       'timestamp': _timestamp,
       'remainingDistance': _remainingDistance
