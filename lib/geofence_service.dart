@@ -53,8 +53,8 @@ class GeofenceService {
   Activity _activity = Activity.unknown;
 
   final _geofenceList = <Geofence>[];
-  final _geofenceStatusChangedListeners = <GeofenceStatusChanged>[];
-  final _activityChangedListeners = <ActivityChanged>[];
+  final _geofenceStatusChangeListeners = <GeofenceStatusChanged>[];
+  final _activityChangeListeners = <ActivityChanged>[];
   final _streamErrorListeners = <ValueChanged>[];
 
   /// Setup [GeofenceService].
@@ -119,25 +119,25 @@ class GeofenceService {
   }
 
   /// Register a closure to be called when the [GeofenceStatus] changes.
-  void addGeofenceStatusChangedListener(GeofenceStatusChanged listener) {
-    _geofenceStatusChangedListeners.add(listener);
+  void addGeofenceStatusChangeListener(GeofenceStatusChanged listener) {
+    _geofenceStatusChangeListeners.add(listener);
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when the [GeofenceStatus] changes.
-  void removeGeofenceStatusChangedListener(GeofenceStatusChanged listener) {
-    _geofenceStatusChangedListeners.remove(listener);
+  void removeGeofenceStatusChangeListener(GeofenceStatusChanged listener) {
+    _geofenceStatusChangeListeners.remove(listener);
   }
 
   /// Register a closure to be called when the [Activity] changes.
-  void addActivityChangedListener(ActivityChanged listener) {
-    _activityChangedListeners.add(listener);
+  void addActivityChangeListener(ActivityChanged listener) {
+    _activityChangeListeners.add(listener);
   }
 
   /// Remove a previously registered closure from the list of closures that
   /// are notified when the [Activity] changes.
-  void removeActivityChangedListener(ActivityChanged listener) {
-    _activityChangedListeners.remove(listener);
+  void removeActivityChangeListener(ActivityChanged listener) {
+    _activityChangeListeners.remove(listener);
   }
 
   /// Register a closure to be called when a stream error occurs.
@@ -311,7 +311,7 @@ class GeofenceService {
           continue;
 
         // 지오펜스 상태 변화 알림
-        for (final listener in _geofenceStatusChangedListeners)
+        for (final listener in _geofenceStatusChangeListeners)
           await listener(geofence, geofenceRadius, geofenceStatus, position)
               .catchError(_handleStreamError);
       }
@@ -324,7 +324,7 @@ class GeofenceService {
   void _onActivityReceive(Activity activity) {
     if (_activity == activity) return;
 
-    for (final listener in _activityChangedListeners)
+    for (final listener in _activityChangeListeners)
       listener(_activity, activity);
     _activity = activity;
   }

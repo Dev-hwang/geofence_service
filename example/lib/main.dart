@@ -62,15 +62,13 @@ class _ExampleAppState extends State<ExampleApp> {
     _geofenceStreamController.sink.add(geofence);
   }
 
-  void _onActivityChanged(
-      Activity prevActivity,
-      Activity currActivity) {
+  void _onActivityChanged(Activity prevActivity, Activity currActivity) {
     dev.log('prevActivity: ${prevActivity.toMap()}');
     dev.log('currActivity: ${currActivity.toMap()}\n');
     _activityStreamController.sink.add(currActivity);
   }
 
-  void _onError(dynamic error) {
+  void _onError(error) {
     final errorCode = getErrorCodesFromError(error);
     if (errorCode == null) {
       dev.log('Undefined error: $error');
@@ -84,8 +82,8 @@ class _ExampleAppState extends State<ExampleApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      _geofenceService.addGeofenceStatusChangedListener(_onGeofenceStatusChanged);
-      _geofenceService.addActivityChangedListener(_onActivityChanged);
+      _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+      _geofenceService.addActivityChangeListener(_onActivityChanged);
       _geofenceService.addStreamErrorListener(_onError);
       _geofenceService.start(_geofenceList).catchError(_onError);
     });
@@ -155,7 +153,7 @@ class _ExampleAppState extends State<ExampleApp> {
             Text(content)
           ]
         );
-      }
+      },
     );
   }
   
@@ -174,7 +172,7 @@ class _ExampleAppState extends State<ExampleApp> {
             Text(content)
           ]
         );
-      }
+      },
     );
   }
 }

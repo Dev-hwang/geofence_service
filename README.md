@@ -152,7 +152,7 @@ final _geofenceList = <Geofence>[
 ];
 ```
 
-3. Register a callback listener and call `GeofenceService.instance.start()`.
+3. Register the listener and call `GeofenceService.instance.start()`.
 
 ```dart
 Future<void> _onGeofenceStatusChanged(
@@ -166,15 +166,13 @@ Future<void> _onGeofenceStatusChanged(
   _geofenceStreamController.sink.add(geofence);
 }
 
-void _onActivityChanged(
-    Activity prevActivity,
-    Activity currActivity) {
+void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   dev.log('prevActivity: ${prevActivity.toMap()}');
   dev.log('currActivity: ${currActivity.toMap()}\n');
   _activityStreamController.sink.add(currActivity);
 }
 
-void _onError(dynamic error) {
+void _onError(error) {
   final errorCode = getErrorCodesFromError(error);
   if (errorCode == null) {
     dev.log('Undefined error: $error');
@@ -188,8 +186,8 @@ void _onError(dynamic error) {
 void initState() {
   super.initState();
   WidgetsBinding.instance?.addPostFrameCallback((_) {
-    _geofenceService.addGeofenceStatusChangedListener(_onGeofenceStatusChanged);
-    _geofenceService.addActivityChangedListener(_onActivityChanged);
+    _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+    _geofenceService.addActivityChangeListener(_onActivityChanged);
     _geofenceService.addStreamErrorListener(_onError);
     _geofenceService.start(_geofenceList).catchError(_onError);
   });
@@ -237,23 +235,32 @@ Widget build(BuildContext context) {
 
 5. To add or remove `Geofence` while the service is running, use the following function:
 
-```
-_geofenceService.addGeofence(object);
-_geofenceService.addGeofenceList(objectList);
-_geofenceService.removeGeofence(object);
-_geofenceService.removeGeofenceList(objectList);
-_geofenceService.removeGeofenceById(string);
+```text
+_geofenceService.addGeofence(Object);
+_geofenceService.addGeofenceList(List);
+_geofenceService.removeGeofence(Object);
+_geofenceService.removeGeofenceList(List);
+_geofenceService.removeGeofenceById(String);
 _geofenceService.clearGeofenceList();
 ```
 
-6. When you are finished using the service, unregister a callback listener and call `GeofenceService.instance.stop()`.
+6. If you want to pause or resume the service, use the function below.
 
+```text
+_geofenceService.pause();
+_geofenceService.resume();
 ```
-_geofenceService.removeGeofenceStatusChangedListener(onGeofenceStatusChanged);
-_geofenceService.removeActivityChangedListener(onActivityChanged);
+
+7. When you are finished using the service, unregister the listener and call `GeofenceService.instance.stop()`.
+
+```text
+_geofenceService.removeGeofenceStatusChangeListener(onGeofenceStatusChanged);
+_geofenceService.removeActivityChangeListener(onActivityChanged);
 _geofenceService.removeStreamErrorListener(onError);
 _geofenceService.stop();
 ```
+
+**Note**: When calling the stop function, the listener is not removed, but the added geofence is cleared.
 
 ## Models
 
