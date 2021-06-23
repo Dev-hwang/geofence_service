@@ -1,6 +1,6 @@
 name: geofence_service
 description: This plugin is a geofence service with activity recognition API.
-version: 3.1.0
+version: 3.1.1
 author: WOO JIN HWANG <hwj930513@naver.com>
 homepage: https://github.com/Dev-hwang/geofence_service
 
@@ -12,8 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  geolocator: ^7.1.0
-  flutter_foreground_task: ^1.0.8
+  geolocator: ^7.1.1
+  flutter_foreground_task: ^2.0.0
   flutter_activity_recognition: ^1.0.2
 
 dev_dependencies:
