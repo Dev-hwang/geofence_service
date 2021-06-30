@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  geolocator: ^7.1.1
+  geolocator: ^7.2.0+1
   flutter_foreground_task: ^2.0.0
   flutter_activity_recognition: ^1.0.2
 
