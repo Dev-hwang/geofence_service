@@ -63,17 +63,6 @@ The biggest feature of this plugin is that it can know user activity while geo-f
 <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 ```
 
-And specify the service inside the `<application>` tag as follows.
-
-```
-<receiver
-    android:name="com.pravera.flutter_activity_recognition.service.ActivityRecognitionIntentReceiver" />
-<service
-    android:name="com.pravera.flutter_activity_recognition.service.ActivityRecognitionIntentService"
-    android:permission="android.permission.BIND_JOB_SERVICE"
-    android:stopWithTask="true" />
-```
-
 ### :baby_chick: iOS
 
 Like Android platform, geo-fencing is based on location, so you need to specify location permission. Open the `ios/Runner/Info.plist` file and add the following permission inside the `<dict>` tag.
