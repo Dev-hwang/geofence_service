@@ -31,15 +31,6 @@ Since geo-fencing operates based on location, we need to add the following permi
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 ```
 
-And specify the service inside the `<application>` tag as follows.
-
-```
-<service
-    android:name="com.pravera.geofence_service.service.LocationProviderIntentService"
-    android:permission="android.permission.BIND_JOB_SERVICE"
-    android:stopWithTask="true" />
-```
-
 In addition, if you want to run the service in the background, add the following permission. If your project supports Android 10, be sure to add the `ACCESS_BACKGROUND_LOCATION` permission.
 
 ```
