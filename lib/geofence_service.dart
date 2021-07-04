@@ -291,8 +291,7 @@ class GeofenceService {
     // Activity Recognition API 사용 안함
     if (_options.useActivityRecognition == false) return;
 
-    _activityStream = FlutterActivityRecognition.instance
-        .getActivityStream()
+    _activityStream = FlutterActivityRecognition.instance.activityStream
         .handleError(_handleStreamError)
         .listen(_onActivityReceive);
   }
