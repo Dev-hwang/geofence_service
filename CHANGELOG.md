@@ -1,3 +1,15 @@
+## 3.1.4
+
+* Move component declaration inside the plugin. Check the readme for more details.
+* Upgrade flutter_foreground_task: ^2.0.3
+* Upgrade flutter_activity_recognition: ^1.1.2
+```markdown
+* Upgrade to `Activity Recognition Transition API`.
+* Remove `ON_FOOT` activity type.
+* Remove `TILTING` activity type.
+* Fix `requestPermission` not working properly.
+```
+
 ## 3.1.3
 
 * Upgrade flutter_foreground_task: ^2.0.1
