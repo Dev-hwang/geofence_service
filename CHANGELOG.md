@@ -21,6 +21,12 @@
 * Add `removeLocationServiceStatusChangeListener` function.
 * Add `printDevLog` option.
 * Rename the listener function.
+```text
+addGeofenceStatusChangedListener -> addGeofenceStatusChangeListener;
+addActivityChangedListener -> addActivityChangeListener;
+removeGeofenceStatusChangedListener -> removeGeofenceStatusChangeListener;
+removeActivityChangedListener -> removeActivityChangeListener;
+```
 * Change the model's `toMap` function name to `toJson`.
 * Update example
 * Update README.md
