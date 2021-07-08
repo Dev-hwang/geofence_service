@@ -1,3 +1,19 @@
+## 3.2.0
+
+* [**BREAKING**] Remove `geolocator` plugin.
+* [**BREAKING**] Add `location` plugin.
+* [**BREAKING**] Change the geolocation model.
+```text
+Position -> LocationData
+```
+* [**BREAKING**] Rename the listener function.
+```text
+addPositionChangeListener -> addLocationDataChangeListener
+removePositionChangeListener -> removeLocationDataChangeListener
+```
+* Fix location permission request not working properly.
+* Fix an issue that the location stream is not closed even when the service is stopped.
+
 ## 3.1.4
 
 * Move component declaration inside the plugin. Check the readme for more details.
@@ -34,10 +50,10 @@
 * Add `printDevLog` option.
 * Rename the listener function.
 ```text
-addGeofenceStatusChangedListener -> addGeofenceStatusChangeListener;
-addActivityChangedListener -> addActivityChangeListener;
-removeGeofenceStatusChangedListener -> removeGeofenceStatusChangeListener;
-removeActivityChangedListener -> removeActivityChangeListener;
+addGeofenceStatusChangedListener -> addGeofenceStatusChangeListener
+addActivityChangedListener -> addActivityChangeListener
+removeGeofenceStatusChangedListener -> removeGeofenceStatusChangeListener
+removeActivityChangedListener -> removeActivityChangeListener
 ```
 * Change the model's `toMap` function name to `toJson`.
 * Update example
