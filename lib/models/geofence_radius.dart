@@ -1,6 +1,6 @@
 import 'package:flutter_activity_recognition/models/activity.dart';
 import 'package:geofence_service/models/geofence_status.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:location/location.dart';
 
 /// A model representing the radius of [Geofence].
 class GeofenceRadius {
@@ -72,13 +72,13 @@ class GeofenceRadius {
 
   /// Update the status of [GeofenceRadius].
   /// Returns true if the status changes, false otherwise.
-  bool updateStatus(
-      GeofenceStatus status, Activity activity, Position position) {
+  bool updateStatus(GeofenceStatus status, Activity activity, double? speed,
+      DateTime? timestamp) {
     if (status != _status) {
       _status = status;
       _activity = activity;
-      _speed = position.speed;
-      _timestamp = position.timestamp;
+      _speed = speed;
+      _timestamp = timestamp;
       return true;
     }
 

@@ -12,7 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  geolocator: ^7.2.0+1
+  location: ^4.3.0
+  vector_math: ^2.1.0
   flutter_foreground_task: ^2.0.3
   flutter_activity_recognition: ^1.1.2
 

@@ -35,8 +35,8 @@ class _ExampleAppState extends State<ExampleApp> {
         GeofenceRadius(id: 'radius_100m', length: 100),
         GeofenceRadius(id: 'radius_25m', length: 25),
         GeofenceRadius(id: 'radius_250m', length: 250),
-        GeofenceRadius(id: 'radius_200m', length: 200)
-      ]
+        GeofenceRadius(id: 'radius_200m', length: 200),
+      ],
     ),
     Geofence(
       id: 'place_2',
@@ -45,8 +45,8 @@ class _ExampleAppState extends State<ExampleApp> {
       radius: [
         GeofenceRadius(id: 'radius_25m', length: 25),
         GeofenceRadius(id: 'radius_100m', length: 100),
-        GeofenceRadius(id: 'radius_200m', length: 200)
-      ]
+        GeofenceRadius(id: 'radius_200m', length: 200),
+      ],
     ),
   ];
 
@@ -55,7 +55,7 @@ class _ExampleAppState extends State<ExampleApp> {
       Geofence geofence,
       GeofenceRadius geofenceRadius,
       GeofenceStatus geofenceStatus,
-      Position position) async {
+      LocationData locationData) async {
     print('geofence: ${geofence.toJson()}');
     print('geofenceRadius: ${geofenceRadius.toJson()}');
     print('geofenceStatus: ${geofenceStatus.toString()}\n');
@@ -69,9 +69,9 @@ class _ExampleAppState extends State<ExampleApp> {
     _activityStreamController.sink.add(currActivity);
   }
 
-  // This function is to be called when the position has changed.
-  void _onPositionChanged(Position position) {
-    print('position: ${position.toJson()}');
+  // This function is to be called when the location data has changed.
+  void _onLocationDataChanged(LocationData locationData) {
+    print('locationData: ${locationData.toString()}');
   }
 
   // This function is to be called when a location service status change occurs
@@ -96,7 +96,7 @@ class _ExampleAppState extends State<ExampleApp> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-      _geofenceService.addPositionChangeListener(_onPositionChanged);
+      _geofenceService.addLocationDataChangeListener(_onLocationDataChanged);
       _geofenceService.addLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
       _geofenceService.addActivityChangeListener(_onActivityChanged);
       _geofenceService.addStreamErrorListener(_onError);
@@ -119,16 +119,16 @@ class _ExampleAppState extends State<ExampleApp> {
           channelName: 'Geofence Service Notification',
           channelDescription: 'This notification appears when the geofence service is running in the background.',
           channelImportance: NotificationChannelImportance.LOW,
-          priority: NotificationPriority.LOW
+          priority: NotificationPriority.LOW,
         ),
         notificationTitle: 'Geofence Service is running',
         notificationText: 'Tap to return to the app',
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Geofence Service'),
-            centerTitle: true
+            centerTitle: true,
           ),
-          body: _buildContentView()
+          body: _buildContentView(),
         ),
       ),
     );
@@ -148,7 +148,7 @@ class _ExampleAppState extends State<ExampleApp> {
       children: [
         _buildActivityMonitor(),
         SizedBox(height: 20.0),
-        _buildGeofenceMonitor()
+        _buildGeofenceMonitor(),
       ],
     );
   }
@@ -165,8 +165,8 @@ class _ExampleAppState extends State<ExampleApp> {
           children: [
             Text('•\t\tActivity (updated: $updatedDateTime)'),
             SizedBox(height: 10.0),
-            Text(content)
-          ]
+            Text(content),
+          ],
         );
       },
     );
@@ -184,8 +184,8 @@ class _ExampleAppState extends State<ExampleApp> {
           children: [
             Text('•\t\tGeofence (updated: $updatedDateTime)'),
             SizedBox(height: 10.0),
-            Text(content)
-          ]
+            Text(content),
+          ],
         );
       },
     );

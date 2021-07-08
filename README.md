@@ -128,8 +128,8 @@ final _geofenceList = <Geofence>[
       GeofenceRadius(id: 'radius_100m', length: 100),
       GeofenceRadius(id: 'radius_25m', length: 25),
       GeofenceRadius(id: 'radius_250m', length: 250),
-      GeofenceRadius(id: 'radius_200m', length: 200)
-    ]
+      GeofenceRadius(id: 'radius_200m', length: 200),
+    ],
   ),
   Geofence(
     id: 'place_2',
@@ -138,8 +138,8 @@ final _geofenceList = <Geofence>[
     radius: [
       GeofenceRadius(id: 'radius_25m', length: 25),
       GeofenceRadius(id: 'radius_100m', length: 100),
-      GeofenceRadius(id: 'radius_200m', length: 200)
-    ]
+      GeofenceRadius(id: 'radius_200m', length: 200),
+    ],
   ),
 ];
 ```
@@ -152,7 +152,7 @@ Future<void> _onGeofenceStatusChanged(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus,
-    Position position) async {
+    LocationData locationData) async {
   print('geofence: ${geofence.toMap()}');
   print('geofenceRadius: ${geofenceRadius.toMap()}');
   print('geofenceStatus: ${geofenceStatus.toString()}\n');
@@ -166,9 +166,9 @@ void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   _activityStreamController.sink.add(currActivity);
 }
 
-// This function is to be called when the position has changed.
-void _onPositionChanged(Position position) {
-  print('position: ${position.toJson()}');
+// This function is to be called when the location data has changed.
+void _onLocationDataChanged(LocationData locationData) {
+  print('locationData: ${locationData.toString()}');
 }
 
 // This function is to be called when a location service status change occurs
@@ -193,7 +193,7 @@ void initState() {
   super.initState();
   WidgetsBinding.instance?.addPostFrameCallback((_) {
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-    _geofenceService.addPositionChangeListener(_onPositionChanged);
+    _geofenceService.addLocationDataChangeListener(_onLocationDataChanged);
     _geofenceService.addLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
     _geofenceService.addActivityChangeListener(_onActivityChanged);
     _geofenceService.addStreamErrorListener(_onError);
@@ -225,16 +225,16 @@ Widget build(BuildContext context) {
         channelName: 'Geofence Service Notification',
         channelDescription: 'This notification appears when the geofence service is running in the background.',
         channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW
+        priority: NotificationPriority.LOW,
       ),
       notificationTitle: 'Geofence Service is running',
       notificationText: 'Tap to return to the app',
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Geofence Service'),
-          centerTitle: true
+          centerTitle: true,
         ),
-        body: _buildContentView()
+        body: _buildContentView(),
       ),
     ),
   );
@@ -263,7 +263,7 @@ _geofenceService.resume();
 
 ```text
 _geofenceService.removeGeofenceStatusChangeListener(onGeofenceStatusChanged);
-_geofenceService.removePositionChangeListener(_onPositionChanged);
+_geofenceService.removeLocationDataChangeListener(_onLocationDataChanged);
 _geofenceService.removeLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
 _geofenceService.removeActivityChangeListener(onActivityChanged);
 _geofenceService.removeStreamErrorListener(onError);

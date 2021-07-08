@@ -11,7 +11,8 @@ import 'package:geofence_service/models/geofence_radius.dart';
 import 'package:geofence_service/models/geofence_radius_sort_type.dart';
 import 'package:geofence_service/models/geofence_service_options.dart';
 import 'package:geofence_service/models/geofence_status.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geofence_service/utils/location_utils.dart';
+import 'package:location/location.dart';
 
 export 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 export 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -21,14 +22,15 @@ export 'package:geofence_service/models/geofence_radius.dart';
 export 'package:geofence_service/models/geofence_radius_sort_type.dart';
 export 'package:geofence_service/models/geofence_service_options.dart';
 export 'package:geofence_service/models/geofence_status.dart';
-export 'package:geolocator/geolocator.dart';
+export 'package:geofence_service/utils/location_utils.dart';
+export 'package:location/location.dart';
 
 /// Function to notify geofence status changes.
 typedef GeofenceStatusChanged = Future<void> Function(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus,
-    Position position);
+    LocationData locationData);
 
 /// Function to notify activity changes.
 typedef ActivityChanged = void Function(
@@ -47,19 +49,20 @@ class GeofenceService {
   /// Returns whether the service is running.
   bool get isRunningService => _isRunningService;
 
+  final _location = Location();
   final _options = GeofenceServiceOptions();
 
   final _locationServiceStatusChangeEventChannel =
       const EventChannel('geofence_service/location_service_status');
 
-  StreamSubscription<Position>? _positionStream;
-  StreamSubscription<bool>? _locationServiceStatusStream;
-  StreamSubscription<Activity>? _activityStream;
+  StreamSubscription<LocationData>? _locationDataSubscription;
+  StreamSubscription<bool>? _locationServiceStatusSubscription;
+  StreamSubscription<Activity>? _activitySubscription;
   Activity _activity = Activity.unknown;
 
   final _geofenceList = <Geofence>[];
   final _geofenceStatusChangeListeners = <GeofenceStatusChanged>[];
-  final _positionChangeListeners = <ValueChanged<Position>>[];
+  final _locationDataChangeListeners = <ValueChanged<LocationData>>[];
   final _locationServiceStatusChangeListeners = <ValueChanged<bool>>[];
   final _activityChangeListeners = <ActivityChanged>[];
   final _streamErrorListeners = <ValueChanged>[];
@@ -103,6 +106,7 @@ class GeofenceService {
   }
 
   /// Stop [GeofenceService].
+  /// Note that the registered geofence list is cleared when this function is called.
   Future<void> stop() async {
     await _cancelStream();
 
@@ -115,15 +119,15 @@ class GeofenceService {
 
   /// Pause [GeofenceService].
   void pause() {
-    _positionStream?.pause();
-    _activityStream?.pause();
+    _locationDataSubscription?.pause();
+    _activitySubscription?.pause();
     _printDevLog('GeofenceService paused.');
   }
 
   /// Resume [GeofenceService].
   void resume() {
-    _positionStream?.resume();
-    _activityStream?.resume();
+    _locationDataSubscription?.resume();
+    _activitySubscription?.resume();
     _printDevLog('GeofenceService resumed.');
   }
 
@@ -157,19 +161,19 @@ class GeofenceService {
         'The ActivityChange listener has been removed. (size: ${_activityChangeListeners.length})');
   }
 
-  /// Register a closure to be called when the [Position] changes.
-  void addPositionChangeListener(ValueChanged<Position> listener) {
-    _positionChangeListeners.add(listener);
+  /// Register a closure to be called when the [LocationData] changes.
+  void addLocationDataChangeListener(ValueChanged<LocationData> listener) {
+    _locationDataChangeListeners.add(listener);
     _printDevLog(
-        'Added PositionChange listener. (size: ${_positionChangeListeners.length})');
+        'Added LocationDataChange listener. (size: ${_locationDataChangeListeners.length})');
   }
 
   /// Remove a previously registered closure from the list of closures that
-  /// are notified when the [Position] changes.
-  void removePositionChangeListener(ValueChanged<Position> listener) {
-    _positionChangeListeners.remove(listener);
+  /// are notified when the [LocationData] changes.
+  void removeLocationDataChangeListener(ValueChanged<LocationData> listener) {
+    _locationDataChangeListeners.remove(listener);
     _printDevLog(
-        'The PositionChange listener has been removed. (size: ${_positionChangeListeners.length})');
+        'The LocationDataChange listener has been removed. (size: ${_locationDataChangeListeners.length})');
   }
 
   /// Register a closure to be called when the location service status changes.
@@ -242,19 +246,18 @@ class GeofenceService {
 
   Future<void> _checkPermissions() async {
     // Check that the location service is enabled.
-    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    final serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled)
       return Future.error(ErrorCodes.LOCATION_SERVICE_DISABLED);
 
     // Check whether to allow location permission.
-    LocationPermission locationPermission = await Geolocator.checkPermission();
-    if (locationPermission == LocationPermission.deniedForever)
+    PermissionStatus permissionStatus = await _location.hasPermission();
+    if (permissionStatus == PermissionStatus.deniedForever) {
       return Future.error(ErrorCodes.LOCATION_PERMISSION_PERMANENTLY_DENIED);
-
-    if (locationPermission == LocationPermission.denied) {
-      locationPermission = await Geolocator.requestPermission();
-      if (locationPermission != LocationPermission.whileInUse &&
-          locationPermission != LocationPermission.always)
+    } else if (permissionStatus == PermissionStatus.denied) {
+      permissionStatus = await _location.requestPermission();
+      if (permissionStatus == PermissionStatus.denied ||
+          permissionStatus == PermissionStatus.deniedForever)
         return Future.error(ErrorCodes.LOCATION_PERMISSION_DENIED);
     }
 
@@ -262,59 +265,60 @@ class GeofenceService {
     if (_options.useActivityRecognition == false) return;
 
     // Check whether to allow activity recognition permission.
-    PermissionRequestResult arPermission =
+    PermissionRequestResult permissionResult =
         await FlutterActivityRecognition.instance.checkPermission();
-    if (arPermission == PermissionRequestResult.PERMANENTLY_DENIED)
+    if (permissionResult == PermissionRequestResult.PERMANENTLY_DENIED) {
       return Future.error(
           ErrorCodes.ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED);
-
-    if (arPermission == PermissionRequestResult.DENIED) {
-      arPermission =
+    } else if (permissionResult == PermissionRequestResult.DENIED) {
+      permissionResult =
           await FlutterActivityRecognition.instance.requestPermission();
-      if (arPermission != PermissionRequestResult.GRANTED)
+      if (permissionResult != PermissionRequestResult.GRANTED)
         return Future.error(ErrorCodes.ACTIVITY_RECOGNITION_PERMISSION_DENIED);
     }
   }
 
   Future<void> _listenStream() async {
-    _positionStream = Geolocator.getPositionStream(
-            desiredAccuracy: LocationAccuracy.best,
-            intervalDuration: Duration(milliseconds: _options.interval))
+    _location.changeSettings(
+        accuracy: LocationAccuracy.navigation, interval: _options.interval);
+    _locationDataSubscription = _location.onLocationChanged
         .handleError(_handleStreamError)
-        .listen(_onPositionReceive);
+        .listen(_onLocationDataReceive);
 
-    _locationServiceStatusStream = _locationServiceStatusChangeEventChannel
-        .receiveBroadcastStream()
-        .map((event) => event == true)
-        .listen(_onLocationServiceStatusChange);
+    _locationServiceStatusSubscription =
+        _locationServiceStatusChangeEventChannel
+            .receiveBroadcastStream()
+            .map((event) => event == true)
+            .listen(_onLocationServiceStatusChange);
 
     // Activity Recognition API 사용 안함
     if (_options.useActivityRecognition == false) return;
 
-    _activityStream = FlutterActivityRecognition.instance.activityStream
+    _activitySubscription = FlutterActivityRecognition.instance.activityStream
         .handleError(_handleStreamError)
         .listen(_onActivityReceive);
   }
 
   Future<void> _cancelStream() async {
-    await _positionStream?.cancel();
-    _positionStream = null;
+    await _locationDataSubscription?.cancel();
+    _locationDataSubscription = null;
 
-    await _locationServiceStatusStream?.cancel();
-    _locationServiceStatusStream = null;
+    await _locationServiceStatusSubscription?.cancel();
+    _locationServiceStatusSubscription = null;
 
-    await _activityStream?.cancel();
-    _activityStream = null;
+    await _activitySubscription?.cancel();
+    _activitySubscription = null;
   }
 
-  void _onPositionReceive(Position position) async {
-    if (position.isMocked && !_options.allowMockLocations) return;
-    if (position.accuracy > _options.accuracy) return;
+  void _onLocationDataReceive(LocationData locationData) async {
+    if (locationData.latitude == null || locationData.longitude == null) return;
+    if ((locationData.isMock ?? false) && !_options.allowMockLocations) return;
+    if ((locationData.accuracy ?? 0.0) > _options.accuracy) return;
 
-    for (final listener in _positionChangeListeners) listener(position);
+    for (final listener in _locationDataChangeListeners) listener(locationData);
 
-    // Pause the service and process the position.
-    _positionStream?.pause();
+    // Pause the service and process the location data.
+    _locationDataSubscription?.pause();
 
     double geoRemainingDistance;
     double radRemainingDistance;
@@ -323,7 +327,9 @@ class GeofenceService {
     GeofenceStatus geofenceStatus;
     List<GeofenceRadius> geofenceRadiusList;
 
-    final currTimestamp = position.timestamp ?? DateTime.now();
+    final currTimestamp = (locationData.time == null)
+        ? DateTime.now()
+        : DateTime.fromMillisecondsSinceEpoch(locationData.time!.toInt());
     DateTime? radTimestamp;
     Duration diffTimestamp;
 
@@ -331,8 +337,11 @@ class GeofenceService {
       geofence = _geofenceList[i];
 
       // 지오펜스 남은 거리 계산 및 업데이트
-      geoRemainingDistance = Geolocator.distanceBetween(position.latitude,
-          position.longitude, geofence.latitude, geofence.longitude);
+      geoRemainingDistance = LocationUtils.distanceBetween(
+          locationData.latitude!,
+          locationData.longitude!,
+          geofence.latitude,
+          geofence.longitude);
       geofence.updateRemainingDistance(geoRemainingDistance);
 
       // 지오펜스 반경 미터 단위 정렬
@@ -373,18 +382,19 @@ class GeofenceService {
           continue;
 
         // 지오펜스 반경 상태 업데이트
-        if (!geofenceRadius.updateStatus(geofenceStatus, _activity, position))
+        if (!geofenceRadius.updateStatus(
+            geofenceStatus, _activity, locationData.speed, currTimestamp))
           continue;
 
         // 지오펜스 상태 변화 알림
         for (final listener in _geofenceStatusChangeListeners)
-          await listener(geofence, geofenceRadius, geofenceStatus, position)
+          await listener(geofence, geofenceRadius, geofenceStatus, locationData)
               .catchError(_handleStreamError);
       }
     }
 
-    // Service resumes when position processing is complete.
-    _positionStream?.resume();
+    // Service resumes when the location data processing is complete.
+    _locationDataSubscription?.resume();
   }
 
   void _onLocationServiceStatusChange(bool status) {
