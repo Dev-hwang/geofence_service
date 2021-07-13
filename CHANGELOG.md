@@ -1,3 +1,7 @@
+## 3.2.1
+
+* Upgrade flutter_foreground_task: ^2.0.4
+
 ## 3.2.0
 
 * [**BREAKING**] Remove `geolocator` plugin.
@@ -13,6 +17,8 @@ removePositionChangeListener -> removeLocationDataChangeListener
 ```
 * Fix location permission request not working properly.
 * Fix an issue that the location stream is not closed even when the service is stopped.
+---
+__When using the `geolocator` plugin, there was a problem that this plugin did not work properly. It will temporarily use the `location` plugin and will move it back to `geolocator` when the bug is fixed.__
 
 ## 3.1.4
 
