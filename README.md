@@ -31,7 +31,7 @@ Since geo-fencing operates based on location, we need to add the following permi
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 ```
 
-In addition, if you want to run the service in the background, add the following permission. If your project supports Android 10, be sure to add the `ACCESS_BACKGROUND_LOCATION` permission.
+If you want to run the service in the background, add the following permission. If your project supports Android 10, be sure to add the `ACCESS_BACKGROUND_LOCATION` permission.
 
 ```
 <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -56,14 +56,14 @@ The biggest feature of this plugin is that it can know user activity while geo-f
 
 ### :baby_chick: iOS
 
-Like Android platform, geo-fencing is based on location, so you need to specify location permission. Open the `ios/Runner/Info.plist` file and add the following permission inside the `<dict>` tag.
+Like Android platform, geo-fencing is based on location, we need to add the following description. Open the `ios/Runner/Info.plist` file and specify it inside the `<dict>` tag.
 
 ```
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>Used to provide geofence service.</string>
 ```
 
-If you want to run the service in the background, add the following permissions.
+If you want to run the service in the background, add the following description.
 
 ```
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -77,7 +77,7 @@ If you want to run the service in the background, add the following permissions.
 </array>
 ```
 
-To detect changes in user activity, add the following permissions.
+To detect changes in user activity, add the following description.
 
 ```
 <key>NSMotionUsageDescription</key>
@@ -152,29 +152,29 @@ Future<void> _onGeofenceStatusChanged(
     Geofence geofence,
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus,
-    LocationData locationData) async {
+    Location location) async {
   print('geofence: ${geofence.toMap()}');
   print('geofenceRadius: ${geofenceRadius.toMap()}');
-  print('geofenceStatus: ${geofenceStatus.toString()}\n');
+  print('geofenceStatus: ${geofenceStatus.toString()}');
   _geofenceStreamController.sink.add(geofence);
 }
 
 // This function is to be called when the activity has changed.
 void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   print('prevActivity: ${prevActivity.toJson()}');
-  print('currActivity: ${currActivity.toJson()}\n');
+  print('currActivity: ${currActivity.toJson()}');
   _activityStreamController.sink.add(currActivity);
 }
 
-// This function is to be called when the location data has changed.
-void _onLocationDataChanged(LocationData locationData) {
-  print('locationData: ${locationData.toString()}');
+// This function is to be called when the location has changed.
+void _onLocationChanged(Location location) {
+  print('location: ${location.toJson()}');
 }
 
-// This function is to be called when a location service status change occurs
+// This function is to be called when a location services status change occurs
 // since the service was started.
-void _onLocationServiceStatusChanged(bool status) {
-  print('location service status: $status');
+void _onLocationServicesStatusChanged(bool status) {
+  print('isLocationServicesEnabled: $status');
 }
 
 // This function is used to handle errors that occur in the service.
@@ -193,8 +193,8 @@ void initState() {
   super.initState();
   WidgetsBinding.instance?.addPostFrameCallback((_) {
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-    _geofenceService.addLocationDataChangeListener(_onLocationDataChanged);
-    _geofenceService.addLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
+    _geofenceService.addLocationChangeListener(_onLocationChanged);
+    _geofenceService.addLocationServicesStatusChangeListener(_onLocationServicesStatusChanged);
     _geofenceService.addActivityChangeListener(_onActivityChanged);
     _geofenceService.addStreamErrorListener(_onError);
     _geofenceService.start(_geofenceList).catchError(_onError);
@@ -262,11 +262,11 @@ _geofenceService.resume();
 7. When you are finished using the service, unregister the listener and call `GeofenceService.instance.stop()`.
 
 ```text
-_geofenceService.removeGeofenceStatusChangeListener(onGeofenceStatusChanged);
-_geofenceService.removeLocationDataChangeListener(_onLocationDataChanged);
-_geofenceService.removeLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
-_geofenceService.removeActivityChangeListener(onActivityChanged);
-_geofenceService.removeStreamErrorListener(onError);
+_geofenceService.removeGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+_geofenceService.removeLocationChangeListener(_onLocationChanged);
+_geofenceService.removeLocationServicesStatusChangeListener(_onLocationServicesStatusChanged);
+_geofenceService.removeActivityChangeListener(_onActivityChanged);
+_geofenceService.removeStreamErrorListener(_onError);
 _geofenceService.stop();
 ```
 
@@ -331,10 +331,8 @@ Defines the type of activity.
 |---|---|
 | `IN_VEHICLE` | The device is in a vehicle, such as a car. |
 | `ON_BICYCLE` | The device is on a bicycle. |
-| `ON_FOOT` | The device is on a user who is walking or running. |
 | `RUNNING` | The device is on a user who is running. This is a sub-activity of ON_FOOT. |
 | `STILL` | The device is still (not moving). |
-| `TILTING` | The device angle relative to gravity changed significantly. This often occurs when a device is picked up from a desk or a user who is sitting stands up. |
 | `WALKING` | The device is on a user who is walking. This is a sub-activity of ON_FOOT. |
 | `UNKNOWN` | Unable to detect the current activity. |
 
@@ -364,16 +362,11 @@ Error codes that may occur in the service.
 | Value | Description |
 |---|---|
 | `ALREADY_STARTED` | Occurs when the service has already been started but the start function is called. |
-| `LOCATION_SERVICE_DISABLED` | Occurs when location service are disabled. When this error occurs, you should notify the user and request activation. |
+| `LOCATION_SERVICES_DISABLED` | Occurs when location services are disabled. When this error occurs, you should notify the user and request activation. |
 | `LOCATION_PERMISSION_DENIED` | Occurs when location permission is denied. |
 | `LOCATION_PERMISSION_PERMANENTLY_DENIED` | Occurs when location permission is permanently denied. In this case, the user must manually allow the permission. |
 | `ACTIVITY_RECOGNITION_PERMISSION_DENIED` | Occurs when activity recognition permission is denied. |
 | `ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED` | Occurs when activity recognition permission is permanently denied. In this case, the user must manually allow the permission. |
-| `ACTIVITY_NOT_REGISTERED` | Occurs when a method channel is called while an activity object is not registered. |
-| `PERMISSION_REQUEST_CANCELLED` | Occurs when permission is cancelled. |
-| `ACTIVITY_UPDATES_REQUEST_FAILED` | Stream Error - Occurs when activity updates request fails. |
-| `ACTIVITY_UPDATES_REMOVE_FAILED` | Stream Error - Occurs when activity updates remove fails. |
-| `ACTIVITY_DATA_ENCODING_FAILED` | Stream Error - Occurs when an error occurs in encoding the recognized activity data. |
 
 ## Support
 

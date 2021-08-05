@@ -55,29 +55,29 @@ class _ExampleAppState extends State<ExampleApp> {
       Geofence geofence,
       GeofenceRadius geofenceRadius,
       GeofenceStatus geofenceStatus,
-      LocationData locationData) async {
+      Location location) async {
     print('geofence: ${geofence.toJson()}');
     print('geofenceRadius: ${geofenceRadius.toJson()}');
-    print('geofenceStatus: ${geofenceStatus.toString()}\n');
+    print('geofenceStatus: ${geofenceStatus.toString()}');
     _geofenceStreamController.sink.add(geofence);
   }
 
   // This function is to be called when the activity has changed.
   void _onActivityChanged(Activity prevActivity, Activity currActivity) {
     print('prevActivity: ${prevActivity.toJson()}');
-    print('currActivity: ${currActivity.toJson()}\n');
+    print('currActivity: ${currActivity.toJson()}');
     _activityStreamController.sink.add(currActivity);
   }
 
-  // This function is to be called when the location data has changed.
-  void _onLocationDataChanged(LocationData locationData) {
-    print('locationData: ${locationData.toString()}');
+  // This function is to be called when the location has changed.
+  void _onLocationChanged(Location location) {
+    print('location: ${location.toJson()}');
   }
 
-  // This function is to be called when a location service status change occurs
+  // This function is to be called when a location services status change occurs
   // since the service was started.
-  void _onLocationServiceStatusChanged(bool status) {
-    print('location service status: $status');
+  void _onLocationServicesStatusChanged(bool status) {
+    print('isLocationServicesEnabled: $status');
   }
 
   // This function is used to handle errors that occur in the service.
@@ -96,8 +96,8 @@ class _ExampleAppState extends State<ExampleApp> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-      _geofenceService.addLocationDataChangeListener(_onLocationDataChanged);
-      _geofenceService.addLocationServiceStatusChangeListener(_onLocationServiceStatusChanged);
+      _geofenceService.addLocationChangeListener(_onLocationChanged);
+      _geofenceService.addLocationServicesStatusChangeListener(_onLocationServicesStatusChanged);
       _geofenceService.addActivityChangeListener(_onActivityChanged);
       _geofenceService.addStreamErrorListener(_onError);
       _geofenceService.start(_geofenceList).catchError(_onError);

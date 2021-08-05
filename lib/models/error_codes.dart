@@ -5,9 +5,9 @@ enum ErrorCodes {
   /// Occurs when the service has already been started but the start function is called.
   ALREADY_STARTED,
 
-  /// Occurs when location service are disabled.
+  /// Occurs when location services are disabled.
   /// When this error occurs, you should notify the user and request activation.
-  LOCATION_SERVICE_DISABLED,
+  LOCATION_SERVICES_DISABLED,
 
   /// Occurs when location permission is denied.
   LOCATION_PERMISSION_DENIED,
@@ -21,25 +21,7 @@ enum ErrorCodes {
 
   /// Occurs when activity recognition permission is permanently denied.
   /// In this case, the user must manually allow the permission.
-  ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED,
-
-  /// Occurs when a method channel is called while an activity object is not registered.
-  ACTIVITY_NOT_REGISTERED,
-
-  /// Occurs when permission is cancelled.
-  PERMISSION_REQUEST_CANCELLED,
-
-  /// Stream Error
-  /// Occurs when activity updates request fails.
-  ACTIVITY_UPDATES_REQUEST_FAILED,
-
-  /// Stream Error
-  /// Occurs when activity updates remove fails.
-  ACTIVITY_UPDATES_REMOVE_FAILED,
-
-  /// Stream Error
-  /// Occurs when an error occurs in encoding the recognized activity data.
-  ACTIVITY_DATA_ENCODING_FAILED
+  ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED
 }
 
 /// Returns the error codes from [value].

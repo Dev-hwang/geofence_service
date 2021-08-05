@@ -4,12 +4,8 @@
 
 ## 3.2.0
 
-* [**BREAKING**] Remove `geolocator` plugin.
-* [**BREAKING**] Add `location` plugin.
-* [**BREAKING**] Change the geolocation model.
-```text
-Position -> LocationData
-```
+* [**BREAKING**] Replace plugin from `geolocator` to `location`.
+* [**BREAKING**] Replace data model from `Position` to `LocationData`.
 * [**BREAKING**] Rename the listener function.
 ```text
 addPositionChangeListener -> addLocationDataChangeListener
@@ -17,8 +13,6 @@ removePositionChangeListener -> removeLocationDataChangeListener
 ```
 * Fix location permission request not working properly.
 * Fix an issue that the location stream is not closed even when the service is stopped.
----
-__When using the `geolocator` plugin, there was a problem that this plugin did not work properly. It will temporarily use the `location` plugin and will move it back to `geolocator` when the bug is fixed.__
 
 ## 3.1.4
 
