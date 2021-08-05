@@ -81,7 +81,6 @@ removeActivityChangedListener -> removeActivityChangeListener
 * [**BREAKING**] Remove the foreground_service package inside the plugin, and add the `flutter_foreground_task: ^1.0.7` plugin.
 * Updates Comment and Documentation.
 * Android SDK target upgrade.
-* Please refer to the [upgrade guide](https://github.com/Dev-hwang/geofence_service/blob/master/UPGRADE_GUIDE.md) for details.
 
 ## 2.1.4
 
