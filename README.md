@@ -267,6 +267,7 @@ _geofenceService.removeLocationChangeListener(_onLocationChanged);
 _geofenceService.removeLocationServicesStatusChangeListener(_onLocationServicesStatusChanged);
 _geofenceService.removeActivityChangeListener(_onActivityChanged);
 _geofenceService.removeStreamErrorListener(_onError);
+_geofenceService.clearAllListeners();
 _geofenceService.stop();
 ```
 

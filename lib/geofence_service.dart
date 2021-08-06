@@ -204,6 +204,15 @@ class GeofenceService {
         'The StreamError listener has been removed. (size: ${_streamErrorListeners.length})');
   }
 
+  /// Clears all listeners registered with the service.
+  void clearAllListeners() {
+    _geofenceStatusChangeListeners.clear();
+    _locationChangeListeners.clear();
+    _locationServicesStatusChangeListeners.clear();
+    _activityChangeListeners.clear();
+    _streamErrorListeners.clear();
+  }
+
   /// Add geofence.
   void addGeofence(Geofence geofence) {
     _geofenceList.add(geofence);
