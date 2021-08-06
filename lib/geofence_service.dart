@@ -375,7 +375,8 @@ class GeofenceService {
         geofenceRadius.updateRemainingDistance(radRemainingDistance);
 
         // 상태 변경이 빈번하게 발생하지 않도록 딜레이 적용
-        if (radTimestamp != null &&
+        if (geofenceStatus != GeofenceStatus.DWELL &&
+            radTimestamp != null &&
             diffTimestamp.inMilliseconds < _options.statusChangeDelayMs)
           continue;
 
