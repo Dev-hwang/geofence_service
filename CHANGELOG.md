@@ -1,3 +1,23 @@
+## 3.3.0
+
+* Upgrade flutter_foreground_task: ^2.1.0
+* [**BREAKING**] Replace plugin from `location` to `fl_location`.
+* [**BREAKING**] Replace data model from `LocationData` to `Location`.
+* Rename the listener function.
+```text
+addLocationDataChangeListener -> addLocationChangeListener
+addLocationServiceStatusChangeListener -> addLocationServicesStatusChangeListener
+removeLocationDataChangeListener -> removeLocationChangeListener
+removeLocationServiceStatusChangeListener -> removeLocationServicesStatusChangeListener
+```
+* Rename the error code.
+```text
+LOCATION_SERVICE_DISABLED -> LOCATION_SERVICES_DISABLED
+```
+* Add `clearAllListeners` function.
+* Add `foregroundServiceType` to android service tag.
+* Fixed DWELL status change being delayed due to statusChangeDelayMs.
+
 ## 3.2.1
 
 * Upgrade flutter_foreground_task: ^2.0.4
@@ -6,7 +26,7 @@
 
 * [**BREAKING**] Replace plugin from `geolocator` to `location`.
 * [**BREAKING**] Replace data model from `Position` to `LocationData`.
-* [**BREAKING**] Rename the listener function.
+* Rename the listener function.
 ```text
 addPositionChangeListener -> addLocationDataChangeListener
 removePositionChangeListener -> removeLocationDataChangeListener

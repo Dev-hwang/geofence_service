@@ -1,4 +1,6 @@
 PODS:
+  - fl_location (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_activity_recognition (0.0.1):
     - Flutter
@@ -6,17 +8,17 @@ PODS:
     - Flutter
   - geofence_service (0.0.1):
     - Flutter
-  - geolocator (6.2.0):
-    - Flutter
 
 DEPENDENCIES:
+  - fl_location (from `.symlinks/plugins/fl_location/ios`)
   - Flutter (from `Flutter`)
   - flutter_activity_recognition (from `.symlinks/plugins/flutter_activity_recognition/ios`)
   - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
   - geofence_service (from `.symlinks/plugins/geofence_service/ios`)
-  - geolocator (from `.symlinks/plugins/geolocator/ios`)
 
 EXTERNAL SOURCES:
+  fl_location:
+    :path: ".symlinks/plugins/fl_location/ios"
   Flutter:
     :path: Flutter
   flutter_activity_recognition:
@@ -25,15 +27,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_foreground_task/ios"
   geofence_service:
     :path: ".symlinks/plugins/geofence_service/ios"
-  geolocator:
-    :path: ".symlinks/plugins/geolocator/ios"
 
 SPEC CHECKSUMS:
+  fl_location: 68b4a6c4aad2a453493ff66f196e0748280cf43e
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_activity_recognition: 5c3b026997742b01e82424ef257db9640822ad77
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   geofence_service: e007ddec3cf8b85531e8f7b202c1ceabca669d64
-  geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
