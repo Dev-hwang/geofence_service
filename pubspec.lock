@@ -56,14 +56,14 @@ packages:
       name: fl_location
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   fl_location_platform_interface:
     dependency: transitive
     description:
       name: fl_location_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
