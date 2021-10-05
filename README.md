@@ -221,13 +221,14 @@ Widget build(BuildContext context) {
         // You can add a foreground task start condition.
         return _geofenceService.isRunningService;
       },
-      notificationOptions: NotificationOptions(
+      androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'geofence_service_notification_channel',
         channelName: 'Geofence Service Notification',
         channelDescription: 'This notification appears when the geofence service is running in the background.',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
       ),
+      iosNotificationOptions: IOSNotificationOptions(),
       notificationTitle: 'Geofence Service is running',
       notificationText: 'Tap to return to the app',
       child: Scaffold(
