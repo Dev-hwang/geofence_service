@@ -1,3 +1,8 @@
+## 3.4.0
+
+* Upgrade flutter_foreground_task: ^3.0.0+1
+* Changed parameter name of `WillStartForegroundTask` widget.
+
 ## 3.3.2
 
 * Fix errorCodes parsing function not working properly.
