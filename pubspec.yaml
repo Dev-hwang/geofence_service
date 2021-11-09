@@ -13,7 +13,7 @@ dependencies:
 
   fl_location: ^1.0.1
   vector_math: ^2.1.0
-  flutter_foreground_task: ^3.2.0
+  flutter_foreground_task: ^3.2.2
   flutter_activity_recognition: ^1.1.2
 
 dev_dependencies:
