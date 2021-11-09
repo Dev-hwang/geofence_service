@@ -1,3 +1,8 @@
+## 3.4.2
+
+* Upgrade flutter_foreground_task: ^3.2.2
+* [Bug] Fixed an issue where RemoteServiceException occurred intermittently.
+
 ## 3.4.1
 
 * Upgrade flutter_foreground_task: ^3.2.0
