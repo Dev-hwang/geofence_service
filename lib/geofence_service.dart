@@ -11,7 +11,6 @@ import 'package:geofence_service/models/geofence_radius.dart';
 import 'package:geofence_service/models/geofence_radius_sort_type.dart';
 import 'package:geofence_service/models/geofence_service_options.dart';
 import 'package:geofence_service/models/geofence_status.dart';
-import 'package:geofence_service/utils/location_utils.dart';
 
 export 'package:fl_location/fl_location.dart';
 export 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
@@ -22,7 +21,6 @@ export 'package:geofence_service/models/geofence_radius.dart';
 export 'package:geofence_service/models/geofence_radius_sort_type.dart';
 export 'package:geofence_service/models/geofence_service_options.dart';
 export 'package:geofence_service/models/geofence_status.dart';
-export 'package:geofence_service/utils/location_utils.dart';
 
 /// Callback function to handle geofence status changes.
 typedef GeofenceStatusChanged = Future<void> Function(

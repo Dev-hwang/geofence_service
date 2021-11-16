@@ -36,6 +36,7 @@ If you want to run the service in the background, add the following permission. 
 ```
 <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
 ```
 
 And specify the service inside the `<application>` tag as follows.
@@ -217,7 +218,7 @@ Widget build(BuildContext context) {
     // A widget used when you want to start a foreground task when trying to minimize or close the app.
     // Declare on top of the [Scaffold] widget.
     home: WillStartForegroundTask(
-      onWillStart: () {
+      onWillStart: () async {
         // You can add a foreground task start condition.
         return _geofenceService.isRunningService;
       },

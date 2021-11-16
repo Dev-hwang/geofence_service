@@ -110,7 +110,7 @@ class _ExampleAppState extends State<ExampleApp> {
       // A widget used when you want to start a foreground task when trying to minimize or close the app.
       // Declare on top of the [Scaffold] widget.
       home: WillStartForegroundTask(
-        onWillStart: () {
+        onWillStart: () async {
           // You can add a foreground task start condition.
           return _geofenceService.isRunningService;
         },
