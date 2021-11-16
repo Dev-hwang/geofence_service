@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
 
-void main() => runApp(ExampleApp());
+void main() => runApp(const ExampleApp());
 
 class ExampleApp extends StatefulWidget {
+  const ExampleApp({Key? key}) : super(key: key);
+
   @override
   _ExampleAppState createState() => _ExampleAppState();
 }
@@ -114,7 +116,7 @@ class _ExampleAppState extends State<ExampleApp> {
           // You can add a foreground task start condition.
           return _geofenceService.isRunningService;
         },
-        androidNotificationOptions: AndroidNotificationOptions(
+        androidNotificationOptions: const AndroidNotificationOptions(
           channelId: 'geofence_service_notification_channel',
           channelName: 'Geofence Service Notification',
           channelDescription: 'This notification appears when the geofence service is running in the background.',
@@ -122,7 +124,7 @@ class _ExampleAppState extends State<ExampleApp> {
           priority: NotificationPriority.LOW,
           isSticky: false,
         ),
-        iosNotificationOptions: IOSNotificationOptions(),
+        iosNotificationOptions: const IOSNotificationOptions(),
         notificationTitle: 'Geofence Service is running',
         notificationText: 'Tap to return to the app',
         child: Scaffold(
@@ -149,7 +151,7 @@ class _ExampleAppState extends State<ExampleApp> {
       padding: const EdgeInsets.all(8.0),
       children: [
         _buildActivityMonitor(),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         _buildGeofenceMonitor(),
       ],
     );
@@ -166,7 +168,7 @@ class _ExampleAppState extends State<ExampleApp> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('•\t\tActivity (updated: $updatedDateTime)'),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Text(content),
           ],
         );
@@ -185,7 +187,7 @@ class _ExampleAppState extends State<ExampleApp> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('•\t\tGeofence (updated: $updatedDateTime)'),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Text(content),
           ],
         );
