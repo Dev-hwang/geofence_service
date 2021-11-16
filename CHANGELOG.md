@@ -1,7 +1,13 @@
+## 3.4.3
+
+* Upgrade dependencies.
+* Bump Android minSdkVersion to 23.
+* Bump Android compileSdkVersion to 31.
+
 ## 3.4.2
 
 * Upgrade flutter_foreground_task: ^3.2.2
-* [Bug] Fixed an issue where RemoteServiceException occurred intermittently.
+* [**Bug**] Fixed an issue where RemoteServiceException occurred intermittently.
 
 ## 3.4.1
 
@@ -9,7 +15,7 @@
 
 ## 3.4.0
 
-* Upgrade flutter_foreground_task: ^3.0.0+1
+* Upgrade flutter_foreground_task: ^3.0.0
 * Changed parameter name of `WillStartForegroundTask` widget.
 
 ## 3.3.2
