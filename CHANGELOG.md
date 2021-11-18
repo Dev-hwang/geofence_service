@@ -1,3 +1,9 @@
+## 3.4.4
+
+* Upgrade dependencies.
+* [**Bug**] Fixed an issue where lockMode(wakeLock, wifiLock) was not properly released when the service was forcibly shutdown.
+* [**Bug**] Fixed an issue where foreground service notification UX was delayed on Android version 12.
+
 ## 3.4.3
 
 * Upgrade dependencies.
