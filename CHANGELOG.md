@@ -1,3 +1,7 @@
+## 3.4.5
+
+* Add process exit code to prevent memory leak. [#16](https://github.com/Dev-hwang/geofence_service/issues/16) 
+
 ## 3.4.4
 
 * Upgrade dependencies.

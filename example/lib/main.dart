@@ -116,7 +116,7 @@ class _ExampleAppState extends State<ExampleApp> {
           // You can add a foreground task start condition.
           return _geofenceService.isRunningService;
         },
-        androidNotificationOptions: const AndroidNotificationOptions(
+        androidNotificationOptions: AndroidNotificationOptions(
           channelId: 'geofence_service_notification_channel',
           channelName: 'Geofence Service Notification',
           channelDescription: 'This notification appears when the geofence service is running in the background.',
