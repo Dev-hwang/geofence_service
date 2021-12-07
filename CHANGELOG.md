@@ -1,3 +1,9 @@
+## 3.4.6
+
+* [**iOS**] Fixed an issue where notifications not related to the service were removed.
+* [**iOS**] Improved compatibility with other plugins that use notifications.
+  - Additional settings are required, so please check the Readme-Getting started.
+
 ## 3.4.5
 
 * Add process exit code to prevent memory leak. [#16](https://github.com/Dev-hwang/geofence_service/issues/16) 
