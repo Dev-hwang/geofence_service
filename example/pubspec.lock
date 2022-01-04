@@ -77,21 +77,21 @@ packages:
       name: fl_location
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   fl_location_platform_interface:
     dependency: transitive
     description:
       name: fl_location_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   fl_location_web:
     dependency: transitive
     description:
       name: fl_location_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -103,14 +103,14 @@ packages:
       name: flutter_activity_recognition
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   flutter_foreground_task:
     dependency: transitive
     description:
       name: flutter_foreground_task
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.5.2"
+    version: "3.5.4"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -218,7 +218,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9"
+    version: "2.0.11"
   shared_preferences_android:
     dependency: transitive
     description:
