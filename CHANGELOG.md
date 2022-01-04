@@ -1,3 +1,8 @@
+## 3.4.7
+
+* Upgrade dependencies.
+* [[#42](https://github.com/Dev-hwang/flutter_foreground_task/issues/42)] Only minimize app on pop when there is no route to pop.
+
 ## 3.4.6
 
 * [**iOS**] Fixed an issue where notifications not related to the service were removed.

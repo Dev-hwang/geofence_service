@@ -134,7 +134,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.4.6"
+    version: "3.4.7"
   js:
     dependency: transitive
     description:
