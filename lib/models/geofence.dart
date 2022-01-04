@@ -31,13 +31,13 @@ class Geofence {
   double? get remainingDistance => _remainingDistance;
 
   /// Constructs an instance of [Geofence].
-  Geofence(
-      {required this.id,
-      this.data,
-      required this.latitude,
-      required this.longitude,
-      required this.radius})
-      : assert(id.isNotEmpty),
+  Geofence({
+    required this.id,
+    this.data,
+    required this.latitude,
+    required this.longitude,
+    required this.radius,
+  })  : assert(id.isNotEmpty),
         assert(radius.isNotEmpty);
 
   /// Returns the data fields of [Geofence] in JSON format.
@@ -66,12 +66,13 @@ class Geofence {
     final dwellRadius =
         innerRadius.where((e) => e.status == GeofenceStatus.DWELL);
 
-    if (innerRadius.isNotEmpty)
+    if (innerRadius.isNotEmpty) {
       return dwellRadius.isNotEmpty
           ? GeofenceStatus.DWELL
           : GeofenceStatus.ENTER;
-    else
+    } else {
       return GeofenceStatus.EXIT;
+    }
   }
 
   /// Gets the timestamp of [Geofence].
@@ -86,9 +87,10 @@ class Geofence {
     timestampList.sort((a, b) => a.compareTo(b));
     if (timestampList.isEmpty) return null;
 
-    if (_getStatus() != GeofenceStatus.EXIT)
+    if (_getStatus() != GeofenceStatus.EXIT) {
       return timestampList.first;
-    else
+    } else {
       return timestampList.last;
+    }
   }
 }

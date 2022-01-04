@@ -65,15 +65,16 @@ class GeofenceService {
 
   /// Setup [GeofenceService].
   /// Some options do not change while the service is running.
-  GeofenceService setup(
-      {int? interval,
-      int? accuracy,
-      int? loiteringDelayMs,
-      int? statusChangeDelayMs,
-      bool? useActivityRecognition,
-      bool? allowMockLocations,
-      bool? printDevLog,
-      GeofenceRadiusSortType? geofenceRadiusSortType}) {
+  GeofenceService setup({
+    int? interval,
+    int? accuracy,
+    int? loiteringDelayMs,
+    int? statusChangeDelayMs,
+    bool? useActivityRecognition,
+    bool? allowMockLocations,
+    bool? printDevLog,
+    GeofenceRadiusSortType? geofenceRadiusSortType,
+  }) {
     _options.interval = interval;
     _options.accuracy = accuracy;
     _options.loiteringDelayMs = loiteringDelayMs;
@@ -220,7 +221,9 @@ class GeofenceService {
 
   /// Add geofence list.
   void addGeofenceList(List<Geofence> geofenceList) {
-    for (var i = 0; i < geofenceList.length; i++) addGeofence(geofenceList[i]);
+    for (var i = 0; i < geofenceList.length; i++) {
+      addGeofence(geofenceList[i]);
+    }
   }
 
   /// Remove geofence.
@@ -232,8 +235,9 @@ class GeofenceService {
 
   /// Remove geofence list.
   void removeGeofenceList(List<Geofence> geofenceList) {
-    for (var i = 0; i < geofenceList.length; i++)
+    for (var i = 0; i < geofenceList.length; i++) {
       removeGeofence(geofenceList[i]);
+    }
   }
 
   /// Remove geofence by [id].
@@ -251,8 +255,9 @@ class GeofenceService {
 
   Future<void> _checkPermissions() async {
     // Check whether location services are enabled.
-    if (!await FlLocation.isLocationServicesEnabled)
+    if (!await FlLocation.isLocationServicesEnabled) {
       return Future.error(ErrorCodes.LOCATION_SERVICES_DISABLED);
+    }
 
     // Check whether to allow location permission.
     var locationPermission = await FlLocation.checkLocationPermission();
@@ -261,8 +266,9 @@ class GeofenceService {
     } else if (locationPermission == LocationPermission.denied) {
       locationPermission = await FlLocation.requestLocationPermission();
       if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever)
+          locationPermission == LocationPermission.deniedForever) {
         return Future.error(ErrorCodes.LOCATION_PERMISSION_DENIED);
+      }
     }
 
     // Activity Recognition API 사용 안함
@@ -277,8 +283,9 @@ class GeofenceService {
     } else if (activityPermission == PermissionRequestResult.DENIED) {
       activityPermission =
           await FlutterActivityRecognition.instance.requestPermission();
-      if (activityPermission != PermissionRequestResult.GRANTED)
+      if (activityPermission != PermissionRequestResult.GRANTED) {
         return Future.error(ErrorCodes.ACTIVITY_RECOGNITION_PERMISSION_DENIED);
+      }
     }
   }
 
@@ -316,7 +323,9 @@ class GeofenceService {
     if (location.isMock && !_options.allowMockLocations) return;
     if (location.accuracy > _options.accuracy) return;
 
-    for (final listener in _locationChangeListeners) listener(location);
+    for (final listener in _locationChangeListeners) {
+      listener(location);
+    }
 
     // Pause the service and process the location.
     _locationSubscription?.pause();
@@ -342,10 +351,11 @@ class GeofenceService {
 
       // 지오펜스 반경 미터 단위 정렬
       geofenceRadiusList = geofence.radius.toList();
-      if (_options.geofenceRadiusSortType == GeofenceRadiusSortType.ASC)
+      if (_options.geofenceRadiusSortType == GeofenceRadiusSortType.ASC) {
         geofenceRadiusList.sort((a, b) => a.length.compareTo(b.length));
-      else
+      } else {
         geofenceRadiusList.sort((a, b) => b.length.compareTo(a.length));
+      }
 
       // 지오펜스 반경 처리 시작
       for (var j = 0; j < geofenceRadiusList.length; j++) {
@@ -375,17 +385,21 @@ class GeofenceService {
         // 상태 변경이 빈번하게 발생하지 않도록 딜레이 적용
         if (geofenceStatus != GeofenceStatus.DWELL &&
             radTimestamp != null &&
-            diffTimestamp.inMilliseconds < _options.statusChangeDelayMs)
+            diffTimestamp.inMilliseconds < _options.statusChangeDelayMs) {
           continue;
+        }
 
         // 지오펜스 반경 상태 업데이트
         if (!geofenceRadius.updateStatus(
-            geofenceStatus, _activity, location.speed, currTimestamp)) continue;
+            geofenceStatus, _activity, location.speed, currTimestamp)) {
+          continue;
+        }
 
         // 지오펜스 상태 변화 알림
-        for (final listener in _geofenceStatusChangeListeners)
+        for (final listener in _geofenceStatusChangeListeners) {
           await listener(geofence, geofenceRadius, geofenceStatus, location)
               .catchError(_handleStreamError);
+        }
       }
     }
 
@@ -394,20 +408,24 @@ class GeofenceService {
   }
 
   void _onLocationServicesStatusChange(bool status) {
-    for (final listener in _locationServicesStatusChangeListeners)
+    for (final listener in _locationServicesStatusChangeListeners) {
       listener(status);
+    }
   }
 
   void _onActivityReceive(Activity activity) {
     if (_activity == activity) return;
 
-    for (final listener in _activityChangeListeners)
+    for (final listener in _activityChangeListeners) {
       listener(_activity, activity);
+    }
     _activity = activity;
   }
 
   void _handleStreamError(dynamic error) {
-    for (final listener in _streamErrorListeners) listener(error);
+    for (final listener in _streamErrorListeners) {
+      listener(error);
+    }
   }
 
   void _printDevLog(String message) {
