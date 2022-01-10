@@ -1,6 +1,6 @@
 name: geofence_service
 description: This plugin is a geofence service with activity recognition API.
-version: 3.4.7
+version: 3.4.8
 homepage: https://github.com/Dev-hwang/geofence_service
 
 environment:

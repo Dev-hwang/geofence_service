@@ -1,3 +1,8 @@
+## 3.4.8
+
+* Upgrade dependencies.
+* Downgrade Android minSdkVersion to 21.
+
 ## 3.4.7
 
 * Upgrade dependencies.
@@ -11,7 +16,7 @@
 
 ## 3.4.5
 
-* Add process exit code to prevent memory leak. [#16](https://github.com/Dev-hwang/geofence_service/issues/16) 
+* [[#16](https://github.com/Dev-hwang/geofence_service/issues/16)] Add process exit code to prevent memory leak. 
 
 ## 3.4.4
 
