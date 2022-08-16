@@ -3,7 +3,6 @@ import 'dart:developer' as dev;
 
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:geofence_service/errors/error_codes.dart';
 import 'package:geofence_service/models/geofence.dart';
