@@ -236,7 +236,7 @@ void _onError(error) {
 @override
 void initState() {
   super.initState();
-  WidgetsBinding.instance?.addPostFrameCallback((_) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
     _geofenceService.addLocationChangeListener(_onLocationChanged);
     _geofenceService.addLocationServicesStatusChangeListener(_onLocationServicesStatusChanged);
