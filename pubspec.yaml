@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  fl_location: ^1.2.2
-  flutter_foreground_task: ^3.8.2
-  flutter_activity_recognition: ^1.3.0
+  fl_location: ^2.0.0+1
+  flutter_foreground_task: ^4.1.0
+  flutter_activity_recognition: ^2.0.0
 
 dev_dependencies:
   flutter_test:

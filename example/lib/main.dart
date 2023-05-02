@@ -127,6 +127,7 @@ class _ExampleAppState extends State<ExampleApp> {
         iosNotificationOptions: const IOSNotificationOptions(),
         notificationTitle: 'Geofence Service is running',
         notificationText: 'Tap to return to the app',
+        foregroundTaskOptions: const ForegroundTaskOptions(),
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Geofence Service'),
