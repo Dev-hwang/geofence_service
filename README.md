@@ -19,7 +19,7 @@ To use this plugin, add `geofence_service_in_app` as a [dependency in your pubsp
 
 ```yaml
 dependencies:
-  geofence_service_in_app: ^3.6.2
+  geofence_service_in_app: ^3.6.3
 ```
 
 After adding the `geofence_service_in_app` plugin to the flutter project, we need to specify the platform-specific permissions and services to use for this plugin to work properly.

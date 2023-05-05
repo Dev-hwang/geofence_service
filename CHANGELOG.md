@@ -1,3 +1,8 @@
+## 3.6.3
+
+- Upgrade dependencies.
+- [[#4](https://github.com/Dev-hwang/flutter_location/issues/4)] Fixed ios podspec requirements.
+
 ## 3.6.2
 
 - Upgrade dependencies.
