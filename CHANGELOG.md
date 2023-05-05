@@ -1,3 +1,8 @@
+## 3.6.2
+
+- Upgrade dependencies.
+- [[#4](https://github.com/Dev-hwang/flutter_location/issues/4)] Updated readme about forking version and usage again.
+
 ## 3.6.1
 
 - Upgrade dependencies.

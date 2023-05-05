@@ -1,6 +1,6 @@
 name: geofence_service_in_app
 description: This plugin is a fork of geofence_service with updated dependencies.
-version: 3.6.1
+version: 3.6.2
 homepage: https://github.com/volkanakbayir/geofence_service
 
 environment:
