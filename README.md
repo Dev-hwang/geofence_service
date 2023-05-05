@@ -1,26 +1,28 @@
+# Important this is a fork of original [geofence_service](https://pub.dev/packages/geofence_service) package. I've only updated dependencies in order to make it work with later versions of flutter packages.
+
 This plugin is a geofence service with activity recognition API. It does not use the Geofence API implemented on the platform. Therefore, battery efficiency cannot be guaranteed. Instead, this plugin can provide more accurate and realtime geo-fencing by navigating your location while your app is alive.
 
-[![pub package](https://img.shields.io/pub/v/geofence_service.svg)](https://pub.dev/packages/geofence_service)
+[![pub package](https://img.shields.io/pub/v/geofence_service_in_app.svg)](https://pub.dev/packages/geofence_service_in_app)
 
 ## Features
 
-* `Geofence` can have multiple radius.
-* `Geofence` can see what activity took place when the device entered the radius.
-* `GeofenceService` can perform geo-fencing in real time and catch errors during operation.
-* `GeofenceService` can be operated in the background using `WillStartForegroundTask` widget.
+- `Geofence` can have multiple radius.
+- `Geofence` can see what activity took place when the device entered the radius.
+- `GeofenceService` can perform geo-fencing in real time and catch errors during operation.
+- `GeofenceService` can be operated in the background using `WillStartForegroundTask` widget.
 
-**WAIT**: This plugin performs geo-fencing based on a circular geofence. If you want to create a polygon geofence, this [plugin](https://pub.dev/packages/poly_geofence_service) is recommended.
+**WAIT**: This plugin performs geo-fencing based on a circular geofence. If you want to create a polygon geofence, this [plugin](https://pub.dev/packages/poly_geofence_service_in_app) is recommended.
 
 ## Getting started
 
-To use this plugin, add `geofence_service` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). For example:
+To use this plugin, add `geofence_service_in_app` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). For example:
 
 ```yaml
 dependencies:
-  geofence_service: ^3.5.0
+  geofence_service_in_app: ^3.5.0
 ```
 
-After adding the `geofence_service` plugin to the flutter project, we need to specify the platform-specific permissions and services to use for this plugin to work properly.
+After adding the `geofence_service_in_app` plugin to the flutter project, we need to specify the platform-specific permissions and services to use for this plugin to work properly.
 
 ### :baby_chick: Android
 
@@ -132,14 +134,15 @@ To detect changes in user activity, add the following description.
 ## How to use
 
 1. Create a `GeofenceService` instance and set options. `GeofenceService.instance.setup()` provides the following options:
-* `interval`: The time interval in milliseconds to check the geofence status. The default is `5000`.
-* `accuracy`: Geo-fencing error range in meters. The default is `100`.
-* `loiteringDelayMs`: Sets the delay between `GeofenceStatus.ENTER` and `GeofenceStatus.DWELL` in milliseconds. The default is `300000`.
-* `statusChangeDelayMs`: Sets the status change delay in milliseconds. `GeofenceStatus.ENTER` and `GeofenceStatus.EXIT` events may be called frequently when the location is near the boundary of the geofence. Use this option to minimize event calls at this time. If the option value is too large, realtime geo-fencing is not possible, so use it carefully. The default is `10000`.
-* `useActivityRecognition`: Whether to use the activity recognition API. The default is `true`.
-* `allowMockLocations`: Whether to allow mock locations. The default is `false`.
-* `printDevLog`: Whether to show the developer log. If this value is set to true, logs for geofence service activities (start, stop, etc.) can be viewed. It does not work in release mode. The default is `false`.
-* `geofenceRadiusSortType`: Sets the sort type of the geofence radius. The default is `GeofenceRadiusSortType.DESC`.
+
+- `interval`: The time interval in milliseconds to check the geofence status. The default is `5000`.
+- `accuracy`: Geo-fencing error range in meters. The default is `100`.
+- `loiteringDelayMs`: Sets the delay between `GeofenceStatus.ENTER` and `GeofenceStatus.DWELL` in milliseconds. The default is `300000`.
+- `statusChangeDelayMs`: Sets the status change delay in milliseconds. `GeofenceStatus.ENTER` and `GeofenceStatus.EXIT` events may be called frequently when the location is near the boundary of the geofence. Use this option to minimize event calls at this time. If the option value is too large, realtime geo-fencing is not possible, so use it carefully. The default is `10000`.
+- `useActivityRecognition`: Whether to use the activity recognition API. The default is `true`.
+- `allowMockLocations`: Whether to allow mock locations. The default is `false`.
+- `printDevLog`: Whether to show the developer log. If this value is set to true, logs for geofence service activities (start, stop, etc.) can be viewed. It does not work in release mode. The default is `false`.
+- `geofenceRadiusSortType`: Sets the sort type of the geofence radius. The default is `GeofenceRadiusSortType.DESC`.
 
 ```dart
 // Create a [GeofenceService] instance and set options.
@@ -155,12 +158,13 @@ final _geofenceService = GeofenceService.instance.setup(
 ```
 
 2. Create a `Geofence` and `GeofenceRadius` list. `Geofence` and `GeofenceRadius` provides the following parameters:
-* `id`: Identifier for `Geofence` and `GeofenceRadius`.
-* `data`: Custom data for `Geofence` and `GeofenceRadius`.
-* `latitude`: The latitude of geofence center.
-* `longitude`: The longitude of geofence center.
-* `radius`: The radius of `Geofence`.
-* `length`: The length of the radius in meters. The best result should be set between 100 and 150 meters in radius. If Wi-FI is available, it can be set up to 20~40m.
+
+- `id`: Identifier for `Geofence` and `GeofenceRadius`.
+- `data`: Custom data for `Geofence` and `GeofenceRadius`.
+- `latitude`: The latitude of geofence center.
+- `longitude`: The longitude of geofence center.
+- `radius`: The radius of `Geofence`.
+- `length`: The length of the radius in meters. The best result should be set between 100 and 150 meters in radius. If Wi-FI is available, it can be set up to 20~40m.
 
 ```dart
 // Create a [Geofence] list.
@@ -229,7 +233,7 @@ void _onError(error) {
     print('Undefined error: $error');
     return;
   }
-  
+
   print('ErrorCode: $errorCode');
 }
 
@@ -248,11 +252,12 @@ void initState() {
 ```
 
 4. Add `WillStartForegroundTask` widget for background execution on Android platform. `WillStartForegroundTask` provides the following options:
-* `onWillStart`: Called to ask if you want to start the foreground task.
-* `notificationOptions`: Optional values for notification detail settings.
-* `notificationTitle`: The title that will be displayed in the notification.
-* `notificationText`: The text that will be displayed in the notification.
-* `child`: A child widget that contains the `Scaffold` widget.
+
+- `onWillStart`: Called to ask if you want to start the foreground task.
+- `notificationOptions`: Optional values for notification detail settings.
+- `notificationTitle`: The title that will be displayed in the notification.
+- `notificationText`: The text that will be displayed in the notification.
+- `child`: A child widget that contains the `Scaffold` widget.
 
 ```dart
 @override
@@ -266,7 +271,7 @@ Widget build(BuildContext context) {
         return _geofenceService.isRunningService;
       },
       androidNotificationOptions: AndroidNotificationOptions(
-        channelId: 'geofence_service_notification_channel',
+        channelId: 'geofence_service_in_app_notification_channel',
         channelName: 'Geofence Service Notification',
         channelDescription: 'This notification appears when the geofence service is running in the background.',
         channelImportance: NotificationChannelImportance.LOW,
@@ -326,96 +331,96 @@ _geofenceService.stop();
 
 A model representing a geofence.
 
-| Property | Description |
-|---|---|
-| `id` | Identifier for `Geofence`. |
-| `data` | Custom data for `Geofence`. |
-| `latitude` | The latitude of geofence center. |
-| `longitude` | The longitude of geofence center. |
-| `radius` | The radius of `Geofence`. |
-| `status` | The status of `Geofence`. |
-| `timestamp` | The timestamp of `Geofence`. |
+| Property            | Description                                |
+| ------------------- | ------------------------------------------ |
+| `id`                | Identifier for `Geofence`.                 |
+| `data`              | Custom data for `Geofence`.                |
+| `latitude`          | The latitude of geofence center.           |
+| `longitude`         | The longitude of geofence center.          |
+| `radius`            | The radius of `Geofence`.                  |
+| `status`            | The status of `Geofence`.                  |
+| `timestamp`         | The timestamp of `Geofence`.               |
 | `remainingDistance` | The remaining distance to the destination. |
 
 ### :chicken: GeofenceRadius
 
 A model representing the radius of `Geofence`.
 
-| Property | Description |
-|---|---|
-| `id` | Identifier for `GeofenceRadius`. |
-| `data` | Custom data for `GeofenceRadius`. |
-| `length` | The length of the radius in meters. |
-| `status` | The status of `GeofenceRadius`. |
-| `activity` | The user activity when geofence status changes. |
-| `speed` | The passing speed when geofence status changes. |
-| `timestamp` | The timestamp when geofence status changes. |
-| `remainingDistance` | The remaining distance to the radius. |
+| Property            | Description                                     |
+| ------------------- | ----------------------------------------------- |
+| `id`                | Identifier for `GeofenceRadius`.                |
+| `data`              | Custom data for `GeofenceRadius`.               |
+| `length`            | The length of the radius in meters.             |
+| `status`            | The status of `GeofenceRadius`.                 |
+| `activity`          | The user activity when geofence status changes. |
+| `speed`             | The passing speed when geofence status changes. |
+| `timestamp`         | The timestamp when geofence status changes.     |
+| `remainingDistance` | The remaining distance to the radius.           |
 
 ### :chicken: GeofenceStatus
 
 Defines the type of the geofence status.
 
-| Value | Description |
-|---|---|
-| `ENTER` | Occurs when entering the geofence radius. |
-| `EXIT` | Occurs when exiting the geofence radius. |
+| Value   | Description                                                               |
+| ------- | ------------------------------------------------------------------------- |
+| `ENTER` | Occurs when entering the geofence radius.                                 |
+| `EXIT`  | Occurs when exiting the geofence radius.                                  |
 | `DWELL` | Occurs when the loitering delay elapses after entering the geofence area. |
 
 ### :chicken: Activity
 
 A model representing the user's activity.
 
-| Property | Description |
-|---|---|
-| `type` | The type of activity recognized. |
+| Property     | Description                            |
+| ------------ | -------------------------------------- |
+| `type`       | The type of activity recognized.       |
 | `confidence` | The confidence of activity recognized. |
 
 ### :chicken: ActivityType
 
 Defines the type of activity.
 
-| Value | Description |
-|---|---|
-| `IN_VEHICLE` | The device is in a vehicle, such as a car. |
-| `ON_BICYCLE` | The device is on a bicycle. |
-| `RUNNING` | The device is on a user who is running. This is a sub-activity of ON_FOOT. |
-| `STILL` | The device is still (not moving). |
-| `WALKING` | The device is on a user who is walking. This is a sub-activity of ON_FOOT. |
-| `UNKNOWN` | Unable to detect the current activity. |
+| Value        | Description                                                                |
+| ------------ | -------------------------------------------------------------------------- |
+| `IN_VEHICLE` | The device is in a vehicle, such as a car.                                 |
+| `ON_BICYCLE` | The device is on a bicycle.                                                |
+| `RUNNING`    | The device is on a user who is running. This is a sub-activity of ON_FOOT. |
+| `STILL`      | The device is still (not moving).                                          |
+| `WALKING`    | The device is on a user who is walking. This is a sub-activity of ON_FOOT. |
+| `UNKNOWN`    | Unable to detect the current activity.                                     |
 
 ### :chicken: ActivityConfidence
 
 Defines the confidence of activity.
 
-| Value | Description |
-|---|---|
-| `HIGH` | High accuracy: 75~100 |
+| Value    | Description            |
+| -------- | ---------------------- |
+| `HIGH`   | High accuracy: 75~100  |
 | `MEDIUM` | Medium accuracy: 50~75 |
-| `LOW` | Low accuracy: 0~50 |
+| `LOW`    | Low accuracy: 0~50     |
 
 ### :chicken: GeofenceRadiusSortType
 
 Defines the sort type of the geofence radius. If you have set multiple radius for one geofence, multiple radius can come in at the same time. At this time, you can control the order in which the radius comes in by referring to the radius meters.
 
-| Value | Description |
-|---|---|
-| `ASC` | Sort the meters in ascending order. |
+| Value  | Description                          |
+| ------ | ------------------------------------ |
+| `ASC`  | Sort the meters in ascending order.  |
 | `DESC` | Sort the meters in descending order. |
 
 ### :chicken: ErrorCodes
 
 Error codes that may occur in the service.
 
-| Value | Description |
-|---|---|
-| `ALREADY_STARTED` | Occurs when the service has already been started but the start function is called. |
-| `LOCATION_SERVICES_DISABLED` | Occurs when location services are disabled. When this error occurs, you should notify the user and request activation. |
-| `LOCATION_PERMISSION_DENIED` | Occurs when location permission is denied. |
-| `LOCATION_PERMISSION_PERMANENTLY_DENIED` | Occurs when location permission is permanently denied. In this case, the user must manually allow the permission. |
-| `ACTIVITY_RECOGNITION_PERMISSION_DENIED` | Occurs when activity recognition permission is denied. |
+| Value                                                | Description                                                                                                                   |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `ALREADY_STARTED`                                    | Occurs when the service has already been started but the start function is called.                                            |
+| `LOCATION_SERVICES_DISABLED`                         | Occurs when location services are disabled. When this error occurs, you should notify the user and request activation.        |
+| `LOCATION_PERMISSION_DENIED`                         | Occurs when location permission is denied.                                                                                    |
+| `LOCATION_PERMISSION_PERMANENTLY_DENIED`             | Occurs when location permission is permanently denied. In this case, the user must manually allow the permission.             |
+| `ACTIVITY_RECOGNITION_PERMISSION_DENIED`             | Occurs when activity recognition permission is denied.                                                                        |
 | `ACTIVITY_RECOGNITION_PERMISSION_PERMANENTLY_DENIED` | Occurs when activity recognition permission is permanently denied. In this case, the user must manually allow the permission. |
 
 ## Support
 
-If you find any bugs or issues while using the plugin, please register an issues on [GitHub](https://github.com/Dev-hwang/geofence_service/issues). You can also contact us at <hwj930513@naver.com>.
+If you find any bugs or issues while using the plugin, please register an issues on [GitHub](https://github.com/volkanakbayir/geofence_service/issues).
