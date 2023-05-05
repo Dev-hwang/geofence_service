@@ -1,8 +1,0 @@
-include: package:flutter_lints/flutter.yaml
-
-linter:
-  rules:
-    avoid_print: false
-    avoid_function_literals_in_foreach_calls: false
-    constant_identifier_names: false
-    prefer_void_to_null: false

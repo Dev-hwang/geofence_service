@@ -1,5 +1,5 @@
-import 'package:geofence_service/models/geofence_radius.dart';
-import 'package:geofence_service/models/geofence_status.dart';
+import 'package:geofence_service_in_app/models/geofence_radius.dart';
+import 'package:geofence_service_in_app/models/geofence_status.dart';
 
 /// A model representing a geofence.
 class Geofence {

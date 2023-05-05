@@ -4,22 +4,22 @@ import 'dart:developer' as dev;
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
-import 'package:geofence_service/errors/error_codes.dart';
-import 'package:geofence_service/models/geofence.dart';
-import 'package:geofence_service/models/geofence_radius.dart';
-import 'package:geofence_service/models/geofence_radius_sort_type.dart';
-import 'package:geofence_service/models/geofence_service_options.dart';
-import 'package:geofence_service/models/geofence_status.dart';
+import 'package:geofence_service_in_app/errors/error_codes.dart';
+import 'package:geofence_service_in_app/models/geofence.dart';
+import 'package:geofence_service_in_app/models/geofence_radius.dart';
+import 'package:geofence_service_in_app/models/geofence_radius_sort_type.dart';
+import 'package:geofence_service_in_app/models/geofence_service_options.dart';
+import 'package:geofence_service_in_app/models/geofence_status.dart';
 
 export 'package:fl_location/fl_location.dart';
 export 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 export 'package:flutter_foreground_task/flutter_foreground_task.dart';
-export 'package:geofence_service/errors/error_codes.dart';
-export 'package:geofence_service/models/geofence.dart';
-export 'package:geofence_service/models/geofence_radius.dart';
-export 'package:geofence_service/models/geofence_radius_sort_type.dart';
-export 'package:geofence_service/models/geofence_service_options.dart';
-export 'package:geofence_service/models/geofence_status.dart';
+export 'package:geofence_service_in_app/errors/error_codes.dart';
+export 'package:geofence_service_in_app/models/geofence.dart';
+export 'package:geofence_service_in_app/models/geofence_radius.dart';
+export 'package:geofence_service_in_app/models/geofence_radius_sort_type.dart';
+export 'package:geofence_service_in_app/models/geofence_service_options.dart';
+export 'package:geofence_service_in_app/models/geofence_status.dart';
 
 /// Callback function to handle geofence status changes.
 typedef GeofenceStatusChanged = Future<void> Function(

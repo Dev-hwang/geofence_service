@@ -1,7 +1,7 @@
-name: geofence_service
-description: This plugin is a geofence service with activity recognition API.
-version: 3.6.0
-homepage: https://github.com/Dev-hwang/geofence_service
+name: geofence_service_in_app
+description: This plugin is a fork of geofence_service with updated dependencies.
+version: 0.0.1
+homepage: https://github.com/volkanakbayir/geofence_service
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

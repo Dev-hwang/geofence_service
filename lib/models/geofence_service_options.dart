@@ -1,4 +1,4 @@
-import 'package:geofence_service/models/geofence_radius_sort_type.dart';
+import 'package:geofence_service_in_app/models/geofence_radius_sort_type.dart';
 
 /// Options for [GeofenceService].
 class GeofenceServiceOptions {

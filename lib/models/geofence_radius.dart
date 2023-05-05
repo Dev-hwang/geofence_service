@@ -1,5 +1,5 @@
 import 'package:flutter_activity_recognition/models/activity.dart';
-import 'package:geofence_service/models/geofence_status.dart';
+import 'package:geofence_service_in_app/models/geofence_status.dart';
 
 /// A model representing the radius of [Geofence].
 class GeofenceRadius {
