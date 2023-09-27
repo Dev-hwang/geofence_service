@@ -1,3 +1,9 @@
+## 5.0.0
+
+* [**CHORE**] Update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'`
+* [**CHORE**] Update dependency to the latest version
+* [**CHORE**] Bump Android compileSdkVersion to 33
+
 ## 4.0.0
 
 * [**CHORE**] Upgrade minimum Flutter version to 3.0.0
