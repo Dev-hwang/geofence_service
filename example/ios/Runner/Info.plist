@@ -43,15 +43,6 @@
 	<false/>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Used to provide geofence service.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Used to provide geofence services in the background.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Used to provide geofence services in the background.</string>
-    <key>UIBackgroundModes</key>
-    <array>
-    	<string>fetch</string>
-    	<string>location</string>
-    </array>
     <key>NSMotionUsageDescription</key>
     <string>Used to recognize user activity information.</string>
 </dict>

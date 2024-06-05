@@ -109,32 +109,12 @@ class _ExampleAppState extends State<ExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // A widget used when you want to start a foreground task when trying to minimize or close the app.
-      // Declare on top of the [Scaffold] widget.
-      home: WillStartForegroundTask(
-        onWillStart: () async {
-          // You can add a foreground task start condition.
-          return _geofenceService.isRunningService;
-        },
-        androidNotificationOptions: AndroidNotificationOptions(
-          channelId: 'geofence_service_notification_channel',
-          channelName: 'Geofence Service Notification',
-          channelDescription: 'This notification appears when the geofence service is running in the background.',
-          channelImportance: NotificationChannelImportance.LOW,
-          priority: NotificationPriority.LOW,
-          isSticky: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Geofence Service'),
+          centerTitle: true,
         ),
-        iosNotificationOptions: const IOSNotificationOptions(),
-        foregroundTaskOptions: const ForegroundTaskOptions(),
-        notificationTitle: 'Geofence Service is running',
-        notificationText: 'Tap to return to the app',
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Geofence Service'),
-            centerTitle: true,
-          ),
-          body: _buildContentView(),
-        ),
+        body: _buildContentView(),
       ),
     );
   }
