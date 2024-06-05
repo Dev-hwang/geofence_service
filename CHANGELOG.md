@@ -1,3 +1,8 @@
+## 6.0.0
+
+* [**FEAT**] Support AGP 8
+* [**REMOVE**] Remove `flutter_foreground_task` dependency. If you want to start a service in the background, use the [flutter_foreground_task](https://pub.dev/packages/flutter_foreground_task) plugin.
+
 ## 5.0.0
 
 * [**CHORE**] Update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'`
