@@ -1,3 +1,7 @@
+## 6.0.0+1
+
+* [**DOCS**] Deprecated
+
 ## 6.0.0
 
 * [**FEAT**] Support AGP 8
